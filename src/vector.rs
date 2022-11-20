@@ -1,6 +1,8 @@
+use crate::marker::Scalar;
 use std::array::from_fn;
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
+#[derive(Copy, Clone)]
 pub struct Vector<T: Sized, const S: usize> {
     array: [T; S],
 }
@@ -34,101 +36,227 @@ impl<T: Sized + Copy, const S: usize> Vector<T, S> {
         sum.sqrt()
     }
 
+    pub fn normalize_f64(&self) -> Self
+    where
+        T: Div<f64> + Into<f64>,
+        Vector<T, S>: Div<f64, Output = Vector<T, S>>,
+    {
+        *self / self.magnitude_f64()
+    }
+
+    pub fn normalize_f32(&self) -> Self
+    where
+        T: Div<f32> + Into<f32>,
+        Vector<T, S>: Div<f32, Output = Vector<T, S>>,
+    {
+        *self / self.magnitude_f32()
+    }
+
     #[inline]
-    fn into_op_across<Out>(self, rhs: Self, f: fn(T, T) -> Out) -> Vector<Out, S> {
+    fn into_scalar_op<Out, R: Copy>(self, rhs: R, f: fn(T, R) -> Out) -> Vector<Out, S> {
+        Vector {
+            array: from_fn(move |i| f(self.array[i], rhs)),
+        }
+    }
+
+    #[inline]
+    fn into_vector_op<R: Copy, Out>(self, rhs: Vector<R, S>, f: fn(T, R) -> Out) -> Vector<Out, S> {
         Vector {
             array: from_fn(move |i| f(self.array[i], rhs.array[i])),
         }
     }
 
     #[inline]
-    fn assign_op_across(&mut self, rhs: Self, f: fn(T, T) -> T) {
+    fn assign_from_scalar_op<R: Copy>(&mut self, rhs: R, f: fn(T, R) -> T) {
+        for i in 0..S {
+            self.array[i] = f(self.array[i], rhs);
+        }
+    }
+
+    #[inline]
+    fn assign_from_vector_op<R: Copy>(&mut self, rhs: Vector<R, S>, f: fn(T, R) -> T) {
         for i in 0..S {
             self.array[i] = f(self.array[i], rhs.array[i]);
         }
     }
 }
 
-impl<T: Sized + Copy, const S: usize> Add for Vector<T, S>
+impl<T, const S: usize, By> Add<Vector<By, S>> for Vector<T, S>
 where
-    T: Add<T>,
+    T: Sized + Copy + Add<By>,
+    By: Sized + Copy,
 {
-    type Output = Vector<<T as Add>::Output, S>;
+    type Output = Vector<<T as Add<By>>::Output, S>;
 
-    fn add(self, rhs: Self) -> Self::Output {
-        self.into_op_across::<<T as Add>::Output>(rhs, move |lhs_value, rhs_value| {
+    fn add(self, rhs: Vector<By, S>) -> Self::Output {
+        self.into_vector_op::<By, <T as Add<By>>::Output>(rhs, move |lhs_value, rhs_value| {
             lhs_value + rhs_value
         })
     }
 }
 
-impl<T: Sized + Copy, const S: usize> AddAssign for Vector<T, S>
+impl<T, const S: usize, By> Add<By> for Vector<T, S>
 where
-    T: Add<T, Output = T>,
+    T: Sized + Copy + Add<By>,
+    By: Scalar + Sized + Copy,
 {
-    fn add_assign(&mut self, rhs: Self) {
-        self.assign_op_across(rhs, move |lhs_value, rhs_value| lhs_value + rhs_value)
+    type Output = Vector<<T as Add<By>>::Output, S>;
+
+    fn add(self, rhs: By) -> Self::Output {
+        self.into_scalar_op(rhs, move |lhs_value, rhs_value| lhs_value + rhs_value)
     }
 }
 
-impl<T: Sized + Copy, const S: usize> Sub for Vector<T, S>
+impl<T, const S: usize, By> AddAssign<Vector<By, S>> for Vector<T, S>
 where
-    T: Sub<T>,
+    T: Sized + Copy + Add<By, Output = T>,
+    By: Sized + Copy,
 {
-    type Output = Vector<<T as Sub>::Output, S>;
+    fn add_assign(&mut self, rhs: Vector<By, S>) {
+        self.assign_from_vector_op::<By>(rhs, move |lhs_value, rhs_value| lhs_value + rhs_value)
+    }
+}
 
-    fn sub(self, rhs: Self) -> Self::Output {
-        self.into_op_across::<<T as Sub>::Output>(rhs, move |lhs_value, rhs_value| {
+impl<T, const S: usize, By> AddAssign<By> for Vector<T, S>
+where
+    T: Sized + Copy + Add<By, Output = T>,
+    By: Scalar + Sized + Copy,
+{
+    fn add_assign(&mut self, rhs: By) {
+        self.assign_from_scalar_op::<By>(rhs, move |lhs_value, rhs_value| lhs_value + rhs_value)
+    }
+}
+
+impl<T, const S: usize, By> Sub<Vector<By, S>> for Vector<T, S>
+where
+    T: Sized + Copy + Sub<By>,
+    By: Sized + Copy,
+{
+    type Output = Vector<<T as Sub<By>>::Output, S>;
+
+    fn sub(self, rhs: Vector<By, S>) -> Self::Output {
+        self.into_vector_op::<By, <T as Sub<By>>::Output>(rhs, move |lhs_value, rhs_value| {
             lhs_value - rhs_value
         })
     }
 }
 
-impl<T: Sized + Copy, const S: usize> SubAssign for Vector<T, S>
+impl<T, const S: usize, By> Sub<By> for Vector<T, S>
 where
-    T: Sub<T, Output = T>,
+    T: Sized + Copy + Sub<By>,
+    By: Scalar + Sized + Copy,
 {
-    fn sub_assign(&mut self, rhs: Self) {
-        self.assign_op_across(rhs, move |lhs_value, rhs_value| lhs_value - rhs_value)
+    type Output = Vector<<T as Sub<By>>::Output, S>;
+
+    fn sub(self, rhs: By) -> Self::Output {
+        self.into_scalar_op(rhs, move |lhs_value, rhs_value| lhs_value - rhs_value)
     }
 }
 
-impl<T: Sized + Copy, const S: usize> Mul for Vector<T, S>
+impl<T, const S: usize, By> SubAssign<Vector<By, S>> for Vector<T, S>
 where
-    T: Mul<T>,
+    T: Sized + Copy + Sub<By, Output = T>,
+    By: Sized + Copy,
 {
-    type Output = Vector<<T as Mul>::Output, S>;
-
-    fn mul(self, rhs: Self) -> Self::Output {
-        self.into_op_across(rhs, move |lhs_value, rhs_value| lhs_value * rhs_value)
+    fn sub_assign(&mut self, rhs: Vector<By, S>) {
+        self.assign_from_vector_op::<By>(rhs, move |lhs_value, rhs_value| lhs_value - rhs_value)
     }
 }
 
-impl<T: Sized + Copy, const S: usize> MulAssign for Vector<T, S>
+impl<T, const S: usize, By> SubAssign<By> for Vector<T, S>
 where
-    T: Mul<T, Output = T>,
+    T: Sized + Copy + Sub<By, Output = T>,
+    By: Scalar + Sized + Copy,
 {
-    fn mul_assign(&mut self, rhs: Self) {
-        self.assign_op_across(rhs, move |lhs_value, rhs_value| lhs_value * rhs_value)
+    fn sub_assign(&mut self, rhs: By) {
+        self.assign_from_scalar_op::<By>(rhs, move |lhs_value, rhs_value| lhs_value - rhs_value)
     }
 }
 
-impl<T: Sized + Copy, const S: usize> Div for Vector<T, S>
+impl<T, const S: usize, By> Mul<Vector<By, S>> for Vector<T, S>
 where
-    T: Div<T>,
+    T: Sized + Copy + Mul<By>,
+    By: Sized + Copy,
 {
-    type Output = Vector<<T as Div>::Output, S>;
+    type Output = Vector<<T as Mul<By>>::Output, S>;
 
-    fn div(self, rhs: Self) -> Self::Output {
-        self.into_op_across(rhs, move |lhs_value, rhs_value| lhs_value / rhs_value)
+    fn mul(self, rhs: Vector<By, S>) -> Self::Output {
+        self.into_vector_op(rhs, move |lhs_value, rhs_value| lhs_value * rhs_value)
     }
 }
 
-impl<T: Sized + Copy, const S: usize> DivAssign for Vector<T, S>
+impl<T, const S: usize, By> Mul<By> for Vector<T, S>
 where
-    T: Div<T, Output = T>,
+    T: Sized + Copy + Mul<By>,
+    By: Scalar + Sized + Copy,
 {
-    fn div_assign(&mut self, rhs: Self) {
-        self.assign_op_across(rhs, move |lhs_value, rhs_value| lhs_value / rhs_value)
+    type Output = Vector<<T as Mul<By>>::Output, S>;
+
+    fn mul(self, rhs: By) -> Self::Output {
+        self.into_scalar_op(rhs, move |lhs_value, rhs_value| lhs_value * rhs_value)
+    }
+}
+
+impl<T, const S: usize, By> MulAssign<Vector<By, S>> for Vector<T, S>
+where
+    T: Sized + Copy + Mul<By, Output = T>,
+    By: Sized + Copy,
+{
+    fn mul_assign(&mut self, rhs: Vector<By, S>) {
+        self.assign_from_vector_op(rhs, move |lhs_value, rhs_value| lhs_value * rhs_value)
+    }
+}
+
+impl<T, const S: usize, By> MulAssign<By> for Vector<T, S>
+where
+    T: Sized + Copy + Mul<By, Output = T>,
+    By: Scalar + Sized + Copy,
+{
+    fn mul_assign(&mut self, rhs: By) {
+        self.assign_from_scalar_op::<By>(rhs, move |lhs_value, rhs_value| lhs_value * rhs_value)
+    }
+}
+
+impl<T, const S: usize, By> Div<Vector<By, S>> for Vector<T, S>
+where
+    T: Sized + Copy + Div<By>,
+    By: Sized + Copy,
+{
+    type Output = Vector<<T as Div<By>>::Output, S>;
+
+    fn div(self, rhs: Vector<By, S>) -> Self::Output {
+        self.into_vector_op(rhs, move |lhs_value, rhs_value| lhs_value / rhs_value)
+    }
+}
+
+impl<T, const S: usize, By> Div<By> for Vector<T, S>
+where
+    T: Sized + Copy + Div<By>,
+    By: Scalar + Sized + Copy,
+{
+    type Output = Vector<<T as Div<By>>::Output, S>;
+
+    fn div(self, rhs: By) -> Self::Output {
+        self.into_scalar_op(rhs, move |lhs_value, rhs_value| lhs_value / rhs_value)
+    }
+}
+
+impl<T, const S: usize, By> DivAssign<Vector<By, S>> for Vector<T, S>
+where
+    T: Sized + Copy + Div<By, Output = T>,
+    By: Sized + Copy,
+{
+    fn div_assign(&mut self, rhs: Vector<By, S>) {
+        self.assign_from_vector_op(rhs, move |lhs_value, rhs_value| lhs_value / rhs_value)
+    }
+}
+
+impl<T, const S: usize, By> DivAssign<By> for Vector<T, S>
+where
+    T: Sized + Copy + Div<By, Output = T>,
+    By: Scalar + Sized + Copy,
+{
+    fn div_assign(&mut self, rhs: By) {
+        self.assign_from_scalar_op::<By>(rhs, move |lhs_value, rhs_value| lhs_value / rhs_value)
     }
 }
