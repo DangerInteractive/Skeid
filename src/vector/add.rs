@@ -1,6 +1,6 @@
-use std::ops::{Add, AddAssign};
 use crate::marker::Scalar;
 use crate::vector::Vector;
+use std::ops::{Add, AddAssign};
 
 impl<T, const S: usize, By> Add<Vector<By, S>> for Vector<T, S>
 where
@@ -22,6 +22,7 @@ impl<T, const S: usize, By> Add<By> for Vector<T, S>
 where
     T: Sized + Copy + Add<By>,
     By: Scalar + Sized + Copy,
+    <T as Add<By>>::Output: Copy,
 {
     type Output = Vector<<T as Add<By>>::Output, S>;
 

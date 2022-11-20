@@ -1,6 +1,6 @@
-use std::ops::{Sub, SubAssign};
 use crate::marker::Scalar;
 use crate::vector::Vector;
+use std::ops::{Sub, SubAssign};
 
 impl<T, const S: usize, By> Sub<Vector<By, S>> for Vector<T, S>
 where
@@ -22,6 +22,7 @@ impl<T, const S: usize, By> Sub<By> for Vector<T, S>
 where
     T: Sized + Copy + Sub<By>,
     By: Scalar + Sized + Copy,
+    <T as Sub<By>>::Output: Copy,
 {
     type Output = Vector<<T as Sub<By>>::Output, S>;
 
