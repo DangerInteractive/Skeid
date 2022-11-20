@@ -1,0 +1,16 @@
+use crate::vector::Vector;
+use std::ops::{Index, IndexMut};
+
+impl<T, const R: usize> Index<usize> for Vector<T, R> {
+    type Output = T;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.array[index]
+    }
+}
+
+impl<T, const R: usize> IndexMut<usize> for Vector<T, R> {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        &mut self.array[index]
+    }
+}

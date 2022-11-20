@@ -3,6 +3,7 @@ use std::ops::{Div, DivAssign};
 
 mod add;
 mod divide;
+mod index;
 mod multiply;
 mod subtract;
 
@@ -22,7 +23,7 @@ impl<T: Sized + Copy, const S: usize> Vector<T, S> {
     {
         let mut sum = 0.0;
         for i in 0..S {
-            let x = self.array[i].into();
+            let x = self[i].into();
             sum += x.powi(2);
         }
         sum
@@ -34,7 +35,7 @@ impl<T: Sized + Copy, const S: usize> Vector<T, S> {
     {
         let mut sum = 0.0;
         for i in 0..S {
-            let x = self.array[i].into();
+            let x = self[i].into();
             sum += x.powi(2)
         }
         sum
@@ -105,7 +106,7 @@ impl<T: Sized + Copy, const S: usize> Vector<T, S> {
     #[inline]
     fn into_scalar_op<Out, Rhs: Copy>(self, rhs: Rhs, f: fn(T, Rhs) -> Out) -> Vector<Out, S> {
         Vector {
-            array: from_fn(move |i| f(self.array[i], rhs)),
+            array: from_fn(move |i| f(self[i], rhs)),
         }
     }
 
@@ -116,21 +117,21 @@ impl<T: Sized + Copy, const S: usize> Vector<T, S> {
         f: fn(T, Rhs) -> Out,
     ) -> Vector<Out, S> {
         Vector {
-            array: from_fn(move |i| f(self.array[i], rhs.array[i])),
+            array: from_fn(move |i| f(self[i], rhs.array[i])),
         }
     }
 
     #[inline]
     fn assign_from_scalar_op<Rhs: Copy>(&mut self, rhs: Rhs, f: fn(T, Rhs) -> T) {
         for i in 0..S {
-            self.array[i] = f(self.array[i], rhs);
+            self[i] = f(self[i], rhs);
         }
     }
 
     #[inline]
     fn assign_from_componentwise_op<Rhs: Copy>(&mut self, rhs: Vector<Rhs, S>, f: fn(T, Rhs) -> T) {
         for i in 0..S {
-            self.array[i] = f(self.array[i], rhs.array[i]);
+            self[i] = f(self[i], rhs.array[i]);
         }
     }
 }
