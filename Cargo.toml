@@ -1,0 +1,10 @@
+[package]
+name = "skeid"
+version = "0.1.0"
+authors = ["Alexander Barber <alex@dangerzonegames.com>"]
+edition = "2021"
+description = "a linear algebra library for game graphics and physics"
+license = "MIT"
+repository = "https://gitlab.com/DangerInteractive/TimberWolf/Skeid"
+
+[dependencies]
