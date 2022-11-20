@@ -5,6 +5,7 @@ impl<T, const S: usize, By> Div<By> for Vector<T, S>
 where
     T: Sized + Copy + Div<By>,
     By: Sized + Copy,
+    <T as Div<By>>::Output: Copy,
 {
     type Output = Vector<<T as Div<By>>::Output, S>;
 

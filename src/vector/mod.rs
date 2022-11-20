@@ -8,7 +8,7 @@ mod multiply;
 mod subtract;
 
 #[derive(Copy, Clone)]
-pub struct Vector<T: Sized, const R: usize> {
+pub struct Vector<T: Sized + Copy, const R: usize> {
     array: [T; R],
 }
 
@@ -108,21 +108,21 @@ impl<T: Sized + Copy, const R: usize> Vector<T, R> {
     }
 
     #[inline]
-    fn into_scalar_op<Out, Rhs: Copy>(self, rhs: Rhs, f: fn(T, Rhs) -> Out) -> Vector<Out, R> {
-        Vector {
-            array: from_fn(move |i| f(self[i], rhs)),
-        }
+    fn into_scalar_op<Rhs: Copy, Out: Copy>(
+        self,
+        rhs: Rhs,
+        f: fn(T, Rhs) -> Out,
+    ) -> Vector<Out, R> {
+        Vector::from_array(from_fn(move |i| f(self[i], rhs)))
     }
 
     #[inline]
-    fn into_componentwise_op<Rhs: Copy, Out>(
+    fn into_componentwise_op<Rhs: Copy, Out: Copy>(
         self,
         rhs: Vector<Rhs, R>,
         f: fn(T, Rhs) -> Out,
     ) -> Vector<Out, R> {
-        Vector {
-            array: from_fn(move |i| f(self[i], rhs.array[i])),
-        }
+        Vector::from_array(from_fn(move |i| f(self[i], rhs[i])))
     }
 
     #[inline]
@@ -135,7 +135,7 @@ impl<T: Sized + Copy, const R: usize> Vector<T, R> {
     #[inline]
     fn assign_from_componentwise_op<Rhs: Copy>(&mut self, rhs: Vector<Rhs, R>, f: fn(T, Rhs) -> T) {
         for i in 0..R {
-            self[i] = f(self[i], rhs.array[i]);
+            self[i] = f(self[i], rhs[i]);
         }
     }
 }

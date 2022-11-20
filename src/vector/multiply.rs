@@ -5,6 +5,7 @@ impl<T, const S: usize, By> Mul<By> for Vector<T, S>
 where
     T: Sized + Copy + Mul<By>,
     By: Sized + Copy,
+    <T as Mul<By>>::Output: Copy,
 {
     type Output = Vector<<T as Mul<By>>::Output, S>;
 

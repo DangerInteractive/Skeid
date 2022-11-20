@@ -5,6 +5,7 @@ impl<T, const S: usize, By> Sub<Vector<By, S>> for Vector<T, S>
 where
     T: Sized + Copy + Sub<By>,
     By: Sized + Copy,
+    <T as Sub<By>>::Output: Copy,
 {
     type Output = Vector<<T as Sub<By>>::Output, S>;
 
