@@ -9,9 +9,10 @@ where
     type Output = Vector<<T as Add<By>>::Output, S>;
 
     fn add(self, rhs: Vector<By, S>) -> Self::Output {
-        self.into_vector_op::<By, <T as Add<By>>::Output>(rhs, move |lhs_value, rhs_value| {
-            lhs_value + rhs_value
-        })
+        self.into_componentwise_op::<By, <T as Add<By>>::Output>(
+            rhs,
+            move |lhs_value, rhs_value| lhs_value + rhs_value,
+        )
     }
 }
 
@@ -21,6 +22,8 @@ where
     By: Sized + Copy,
 {
     fn add_assign(&mut self, rhs: Vector<By, S>) {
-        self.assign_from_vector_op::<By>(rhs, move |lhs_value, rhs_value| lhs_value + rhs_value)
+        self.assign_from_componentwise_op::<By>(rhs, move |lhs_value, rhs_value| {
+            lhs_value + rhs_value
+        })
     }
 }

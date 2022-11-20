@@ -110,7 +110,7 @@ impl<T: Sized + Copy, const S: usize> Vector<T, S> {
     }
 
     #[inline]
-    fn into_vector_op<Rhs: Copy, Out>(
+    fn into_componentwise_op<Rhs: Copy, Out>(
         self,
         rhs: Vector<Rhs, S>,
         f: fn(T, Rhs) -> Out,
@@ -128,7 +128,7 @@ impl<T: Sized + Copy, const S: usize> Vector<T, S> {
     }
 
     #[inline]
-    fn assign_from_vector_op<Rhs: Copy>(&mut self, rhs: Vector<Rhs, S>, f: fn(T, Rhs) -> T) {
+    fn assign_from_componentwise_op<Rhs: Copy>(&mut self, rhs: Vector<Rhs, S>, f: fn(T, Rhs) -> T) {
         for i in 0..S {
             self.array[i] = f(self.array[i], rhs.array[i]);
         }
