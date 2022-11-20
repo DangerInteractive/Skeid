@@ -23,7 +23,7 @@ impl<T: Sized + Copy, const S: usize> Vector<T, S> {
         let mut sum = 0.0;
         for i in 0..S {
             let x = self.array[i].into();
-            sum += x * x;
+            sum += x.powi(2);
         }
         sum.sqrt()
     }
@@ -35,7 +35,7 @@ impl<T: Sized + Copy, const S: usize> Vector<T, S> {
         let mut sum = 0.0;
         for i in 0..S {
             let x = self.array[i].into();
-            sum += x * x;
+            sum += x.powi(2)
         }
         sum.sqrt()
     }
