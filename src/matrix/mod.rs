@@ -1,7 +1,9 @@
 use crate::vector::Vector;
 
+pub mod index;
+
 pub struct Matrix<T, const R: usize, const C: usize> {
-    array: [Vector<T, C>; R],
+    array: [Vector<T, R>; C],
 }
 
 pub type Matrix2<T> = Matrix<T, 2, 2>;
