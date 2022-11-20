@@ -7,8 +7,8 @@ mod multiply;
 mod subtract;
 
 #[derive(Copy, Clone)]
-pub struct Vector<T: Sized, const S: usize> {
-    array: [T; S],
+pub struct Vector<T: Sized, const R: usize> {
+    array: [T; R],
 }
 
 pub type Vector2<T> = Vector<T, 2>;
@@ -57,28 +57,32 @@ impl<T: Sized + Copy, const S: usize> Vector<T, S> {
     }
 
     #[inline]
-    fn into_scalar_op<Out, R: Copy>(self, rhs: R, f: fn(T, R) -> Out) -> Vector<Out, S> {
+    fn into_scalar_op<Out, Rhs: Copy>(self, rhs: Rhs, f: fn(T, Rhs) -> Out) -> Vector<Out, S> {
         Vector {
             array: from_fn(move |i| f(self.array[i], rhs)),
         }
     }
 
     #[inline]
-    fn into_vector_op<R: Copy, Out>(self, rhs: Vector<R, S>, f: fn(T, R) -> Out) -> Vector<Out, S> {
+    fn into_vector_op<Rhs: Copy, Out>(
+        self,
+        rhs: Vector<Rhs, S>,
+        f: fn(T, Rhs) -> Out,
+    ) -> Vector<Out, S> {
         Vector {
             array: from_fn(move |i| f(self.array[i], rhs.array[i])),
         }
     }
 
     #[inline]
-    fn assign_from_scalar_op<R: Copy>(&mut self, rhs: R, f: fn(T, R) -> T) {
+    fn assign_from_scalar_op<Rhs: Copy>(&mut self, rhs: Rhs, f: fn(T, Rhs) -> T) {
         for i in 0..S {
             self.array[i] = f(self.array[i], rhs);
         }
     }
 
     #[inline]
-    fn assign_from_vector_op<R: Copy>(&mut self, rhs: Vector<R, S>, f: fn(T, R) -> T) {
+    fn assign_from_vector_op<Rhs: Copy>(&mut self, rhs: Vector<Rhs, S>, f: fn(T, Rhs) -> T) {
         for i in 0..S {
             self.array[i] = f(self.array[i], rhs.array[i]);
         }
