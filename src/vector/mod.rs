@@ -5,6 +5,10 @@ mod add;
 mod divide;
 mod index;
 mod multiply;
+mod scalar_add;
+mod scalar_divide;
+mod scalar_multiply;
+mod scalar_subtract;
 mod subtract;
 
 #[derive(Copy, Clone)]
