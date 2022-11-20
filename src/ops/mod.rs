@@ -1,2 +1,2 @@
-mod cross;
-mod dot;
+pub mod cross;
+pub mod dot;
