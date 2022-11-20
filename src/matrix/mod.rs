@@ -2,8 +2,10 @@ use crate::vector::Vector;
 use std::array::from_fn;
 
 pub mod add;
-pub mod subtract;
 pub mod index;
+pub mod scalar_divide;
+pub mod scalar_multiply;
+pub mod subtract;
 
 #[derive(Copy, Clone)]
 pub struct Matrix<T: Sized + Copy, const R: usize, const C: usize> {
