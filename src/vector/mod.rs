@@ -12,9 +12,7 @@ mod scalar_subtract;
 mod subtract;
 
 #[derive(Copy, Clone)]
-pub struct Vector<T: Sized + Copy, const R: usize> {
-    array: [T; R],
-}
+pub struct Vector<T: Sized + Copy, const R: usize>([T; R]);
 
 pub type Vector2<T> = Vector<T, 2>;
 pub type Vector3<T> = Vector<T, 3>;
@@ -22,7 +20,7 @@ pub type Vector4<T> = Vector<T, 4>;
 
 impl<T: Sized + Copy, const R: usize> Vector<T, R> {
     pub fn from_array(array: [T; R]) -> Self {
-        Vector { array }
+        Vector(array)
     }
 
     pub fn magnitude_squared_f64(&self) -> f64

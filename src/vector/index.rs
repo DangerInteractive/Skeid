@@ -8,7 +8,7 @@ where
     type Output = T;
 
     fn index(&self, index: usize) -> &Self::Output {
-        &self.array[index]
+        &self.0[index]
     }
 }
 
@@ -17,6 +17,6 @@ where
     T: Copy,
 {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        &mut self.array[index]
+        &mut self.0[index]
     }
 }
