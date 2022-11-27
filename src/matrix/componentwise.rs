@@ -33,7 +33,7 @@ where
     fn assign_componentwise_op(&mut self, rhs: Matrix<RC, R, C>, op: fn(&mut T, RC)) {
         for column in 0..C {
             for row in 0..R {
-                op(&mut self[(column, row)], rhs[(column, row)])
+                op(&mut self[(column, row)], rhs[(column, row)]);
             }
         }
     }

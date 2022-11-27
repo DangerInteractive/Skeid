@@ -25,7 +25,7 @@ where
     fn assign_componentwise_op(&mut self, rhs: Rhs, op: fn(&mut T, Rhs)) {
         for column in 0..C {
             for row in 0..R {
-                op(&mut self[(column, row)], rhs)
+                op(&mut self[(column, row)], rhs);
             }
         }
     }

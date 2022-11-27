@@ -1,7 +1,8 @@
-use std::array::from_fn;
 use std::ops::{Div, DivAssign};
 
 mod add;
+mod componentwise;
+mod componentwise_scalar;
 mod divide;
 mod index;
 mod multiply;
@@ -107,37 +108,5 @@ impl<T: Sized + Copy, const R: usize> Vector<T, R> {
         Vector<T, R>: DivAssign<f32>,
     {
         *self /= self.magnitude_f32();
-    }
-
-    #[inline]
-    fn into_scalar_op<Rhs: Copy, Out: Copy>(
-        self,
-        rhs: Rhs,
-        f: fn(T, Rhs) -> Out,
-    ) -> Vector<Out, R> {
-        Vector::from_array(from_fn(move |i| f(self[i], rhs)))
-    }
-
-    #[inline]
-    fn into_componentwise_op<Rhs: Copy, Out: Copy>(
-        self,
-        rhs: Vector<Rhs, R>,
-        f: fn(T, Rhs) -> Out,
-    ) -> Vector<Out, R> {
-        Vector::from_array(from_fn(move |i| f(self[i], rhs[i])))
-    }
-
-    #[inline]
-    fn assign_from_scalar_op<Rhs: Copy>(&mut self, rhs: Rhs, f: fn(T, Rhs) -> T) {
-        for i in 0..R {
-            self[i] = f(self[i], rhs);
-        }
-    }
-
-    #[inline]
-    fn assign_from_componentwise_op<Rhs: Copy>(&mut self, rhs: Vector<Rhs, R>, f: fn(T, Rhs) -> T) {
-        for i in 0..R {
-            self[i] = f(self[i], rhs[i]);
-        }
     }
 }

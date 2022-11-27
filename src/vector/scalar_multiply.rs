@@ -1,26 +1,26 @@
 use crate::marker::Scalar;
+use crate::ops::componentwise::{AssignComponentwiseOp, ComponentwiseOp};
 use crate::vector::Vector;
 use std::ops::{Mul, MulAssign};
 
-impl<T, const S: usize, By> Mul<By> for Vector<T, S>
+impl<T, const R: usize, By> Mul<By> for Vector<T, R>
 where
-    T: Sized + Copy + Mul<By>,
-    By: Scalar + Sized + Copy,
-    <T as Mul<By>>::Output: Copy,
+    T: Copy + Mul<By, Output = T>,
+    By: Scalar + Copy,
 {
-    type Output = Vector<<T as Mul<By>>::Output, S>;
+    type Output = Vector<T, R>;
 
     fn mul(self, rhs: By) -> Self::Output {
-        self.into_scalar_op(rhs, move |lhs_value, rhs_value| lhs_value * rhs_value)
+        self.componentwise_op(rhs, move |lhs_value, rhs_value| lhs_value * rhs_value)
     }
 }
 
-impl<T, const S: usize, By> MulAssign<By> for Vector<T, S>
+impl<T, const R: usize, By> MulAssign<By> for Vector<T, R>
 where
-    T: Sized + Copy + Mul<By, Output = T>,
-    By: Scalar + Sized + Copy,
+    T: Copy + MulAssign<By>,
+    By: Scalar + Copy,
 {
     fn mul_assign(&mut self, rhs: By) {
-        self.assign_from_scalar_op::<By>(rhs, move |lhs_value, rhs_value| lhs_value * rhs_value)
+        self.assign_componentwise_op(rhs, move |lhs_value, rhs_value| *lhs_value *= rhs_value)
     }
 }
