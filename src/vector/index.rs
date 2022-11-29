@@ -1,7 +1,7 @@
 use crate::vector::Vector;
 use std::ops::{Index, IndexMut};
 
-impl<T, const R: usize> Index<usize> for Vector<T, R>
+impl<T, const ROWS: usize> Index<usize> for Vector<T, ROWS>
 where
     T: Copy,
 {
@@ -12,7 +12,7 @@ where
     }
 }
 
-impl<T, const R: usize> IndexMut<usize> for Vector<T, R>
+impl<T, const ROWS: usize> IndexMut<usize> for Vector<T, ROWS>
 where
     T: Copy,
 {

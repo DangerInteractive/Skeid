@@ -1,7 +1,7 @@
 use crate::matrix::Matrix;
 use std::ops::{Index, IndexMut};
 
-impl<T, const R: usize, const C: usize> Index<(usize, usize)> for Matrix<T, R, C>
+impl<T, const ROWS: usize, const COLUMNS: usize> Index<(usize, usize)> for Matrix<T, ROWS, COLUMNS>
 where
     T: Copy,
 {
@@ -12,7 +12,8 @@ where
     }
 }
 
-impl<T, const R: usize, const C: usize> IndexMut<(usize, usize)> for Matrix<T, R, C>
+impl<T, const ROWS: usize, const COLUMNS: usize> IndexMut<(usize, usize)>
+    for Matrix<T, ROWS, COLUMNS>
 where
     T: Copy,
 {

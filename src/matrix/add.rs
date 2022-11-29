@@ -2,27 +2,30 @@ use crate::matrix::Matrix;
 use crate::ops::componentwise::{AssignComponentwiseOp, ComponentwiseOp};
 use std::ops::{Add, AddAssign};
 
-impl<T, const R: usize, const C: usize, By> Add<Matrix<By, R, C>> for Matrix<T, R, C>
+impl<T, const ROWS: usize, const COLUMNS: usize, Rhs> Add<Matrix<Rhs, ROWS, COLUMNS>>
+    for Matrix<T, ROWS, COLUMNS>
 where
-    T: Copy + Add<By, Output = T>,
-    By: Copy,
+    T: Copy + Add<Rhs>,
+    Rhs: Copy,
+    <T as Add<Rhs>>::Output: Copy,
 {
-    type Output = Matrix<T, R, C>;
+    type Output = Matrix<<T as Add<Rhs>>::Output, ROWS, COLUMNS>;
 
-    fn add(self, rhs: Matrix<By, R, C>) -> Self::Output {
-        self.componentwise_op(rhs, move |lhs_value: T, rhs_value: By| {
+    fn add(self, rhs: Matrix<Rhs, ROWS, COLUMNS>) -> Self::Output {
+        self.componentwise_op(rhs, move |lhs_value: T, rhs_value: Rhs| {
             lhs_value + rhs_value
         })
     }
 }
 
-impl<T, const R: usize, const C: usize, By> AddAssign<Matrix<By, R, C>> for Matrix<T, R, C>
+impl<T, const ROWS: usize, const COLUMNS: usize, Rhs> AddAssign<Matrix<Rhs, ROWS, COLUMNS>>
+    for Matrix<T, ROWS, COLUMNS>
 where
-    T: Copy + AddAssign<By>,
-    By: Copy,
+    T: Copy + AddAssign<Rhs>,
+    Rhs: Copy,
 {
-    fn add_assign(&mut self, rhs: Matrix<By, R, C>) {
-        self.assign_componentwise_op(rhs, move |lhs_value: &mut T, rhs_value: By| {
+    fn add_assign(&mut self, rhs: Matrix<Rhs, ROWS, COLUMNS>) {
+        self.assign_componentwise_op(rhs, move |lhs_value: &mut T, rhs_value: Rhs| {
             *lhs_value += rhs_value
         })
     }

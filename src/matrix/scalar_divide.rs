@@ -2,24 +2,25 @@ use crate::matrix::Matrix;
 use crate::ops::componentwise::{AssignComponentwiseOp, ComponentwiseOp};
 use std::ops::{Div, DivAssign};
 
-impl<T, const R: usize, const C: usize, By> Div<By> for Matrix<T, R, C>
+impl<T, const ROWS: usize, const COLUMNS: usize, Rhs> Div<Rhs> for Matrix<T, ROWS, COLUMNS>
 where
-    T: Copy + Div<By, Output = T>,
-    By: Copy,
+    T: Copy + Div<Rhs>,
+    Rhs: Copy,
+    <T as Div<Rhs>>::Output: Copy,
 {
-    type Output = Matrix<T, R, C>;
+    type Output = Matrix<<T as Div<Rhs>>::Output, ROWS, COLUMNS>;
 
-    fn div(self, rhs: By) -> Self::Output {
+    fn div(self, rhs: Rhs) -> Self::Output {
         self.componentwise_op(rhs, move |lhs_value, rhs_value| lhs_value / rhs_value)
     }
 }
 
-impl<T, const R: usize, const C: usize, By> DivAssign<By> for Matrix<T, R, C>
+impl<T, const ROWS: usize, const COLUMNS: usize, Rhs> DivAssign<Rhs> for Matrix<T, ROWS, COLUMNS>
 where
-    T: Copy + DivAssign<By>,
-    By: Copy,
+    T: Copy + DivAssign<Rhs>,
+    Rhs: Copy,
 {
-    fn div_assign(&mut self, rhs: By) {
+    fn div_assign(&mut self, rhs: Rhs) {
         self.assign_componentwise_op(rhs, move |lhs_value, rhs_value| *lhs_value /= rhs_value)
     }
 }

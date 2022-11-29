@@ -2,24 +2,25 @@ use crate::matrix::Matrix;
 use crate::ops::componentwise::{AssignComponentwiseOp, ComponentwiseOp};
 use std::ops::{Mul, MulAssign};
 
-impl<T, const R: usize, const C: usize, By> Mul<By> for Matrix<T, R, C>
+impl<T, const ROWS: usize, const COLUMNS: usize, Rhs> Mul<Rhs> for Matrix<T, ROWS, COLUMNS>
 where
-    T: Copy + Mul<By, Output = T>,
-    By: Copy,
+    T: Copy + Mul<Rhs>,
+    Rhs: Copy,
+    <T as Mul<Rhs>>::Output: Copy,
 {
-    type Output = Matrix<T, R, C>;
+    type Output = Matrix<<T as Mul<Rhs>>::Output, ROWS, COLUMNS>;
 
-    fn mul(self, rhs: By) -> Self::Output {
+    fn mul(self, rhs: Rhs) -> Self::Output {
         self.componentwise_op(rhs, move |lhs_value, rhs_value| lhs_value * rhs_value)
     }
 }
 
-impl<T, const R: usize, const C: usize, By> MulAssign<By> for Matrix<T, R, C>
+impl<T, const ROWS: usize, const COLUMNS: usize, Rhs> MulAssign<Rhs> for Matrix<T, ROWS, COLUMNS>
 where
-    T: Copy + MulAssign<By>,
-    By: Copy,
+    T: Copy + MulAssign<Rhs>,
+    Rhs: Copy,
 {
-    fn mul_assign(&mut self, rhs: By) {
+    fn mul_assign(&mut self, rhs: Rhs) {
         self.assign_componentwise_op(rhs, move |lhs_value, rhs_value| *lhs_value *= rhs_value)
     }
 }

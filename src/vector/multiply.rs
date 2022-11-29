@@ -2,27 +2,28 @@ use crate::ops::componentwise::{AssignComponentwiseOp, ComponentwiseOp};
 use crate::vector::Vector;
 use std::ops::{Mul, MulAssign};
 
-impl<T, const R: usize, By> Mul<Vector<By, R>> for Vector<T, R>
+impl<T, const ROWS: usize, Rhs> Mul<Vector<Rhs, ROWS>> for Vector<T, ROWS>
 where
-    T: Copy + Mul<By, Output = T>,
-    By: Copy,
+    T: Copy + Mul<Rhs>,
+    Rhs: Copy,
+    <T as Mul<Rhs>>::Output: Copy,
 {
-    type Output = Vector<T, R>;
+    type Output = Vector<<T as Mul<Rhs>>::Output, ROWS>;
 
-    fn mul(self, rhs: Vector<By, R>) -> Self::Output {
-        self.componentwise_op(rhs, move |lhs_value: T, rhs_value: By| {
+    fn mul(self, rhs: Vector<Rhs, ROWS>) -> Self::Output {
+        self.componentwise_op(rhs, move |lhs_value: T, rhs_value: Rhs| {
             lhs_value * rhs_value
         })
     }
 }
 
-impl<T, const R: usize, By> MulAssign<Vector<By, R>> for Vector<T, R>
+impl<T, const ROWS: usize, Rhs> MulAssign<Vector<Rhs, ROWS>> for Vector<T, ROWS>
 where
-    T: Copy + MulAssign<By>,
-    By: Copy,
+    T: Copy + MulAssign<Rhs>,
+    Rhs: Copy,
 {
-    fn mul_assign(&mut self, rhs: Vector<By, R>) {
-        self.assign_componentwise_op(rhs, move |lhs_value: &mut T, rhs_value: By| {
+    fn mul_assign(&mut self, rhs: Vector<Rhs, ROWS>) {
+        self.assign_componentwise_op(rhs, move |lhs_value: &mut T, rhs_value: Rhs| {
             *lhs_value *= rhs_value
         })
     }

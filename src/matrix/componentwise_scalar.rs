@@ -2,30 +2,36 @@ use crate::matrix::Matrix;
 use crate::ops::componentwise::{AssignComponentwiseOp, ComponentwiseOp};
 use std::array::from_fn;
 
-impl<T, Rhs, const R: usize, const C: usize> ComponentwiseOp<T, Rhs, Rhs> for Matrix<T, R, C>
+impl<Component, Input, OutputComponent, const ROWS: usize, const COLUMNS: usize>
+    ComponentwiseOp<Component, Input, Input, OutputComponent> for Matrix<Component, ROWS, COLUMNS>
 where
-    T: Copy,
-    Rhs: Copy,
+    Component: Copy,
+    Input: Copy,
+    OutputComponent: Copy,
 {
-    type OutputComponent = T;
-    type Output = Matrix<Self::OutputComponent, R, C>;
+    type Output = Matrix<OutputComponent, ROWS, COLUMNS>;
 
-    fn componentwise_op(self, rhs: Rhs, op: fn(T, Rhs) -> Self::OutputComponent) -> Self::Output {
+    fn componentwise_op(
+        self,
+        input: Input,
+        op: fn(Component, Input) -> OutputComponent,
+    ) -> Self::Output {
         Matrix::from_array(from_fn(move |column| {
-            from_fn(move |row| op(self[(column, row)], rhs))
+            from_fn(move |row| op(self[(column, row)], input))
         }))
     }
 }
 
-impl<T, Rhs, const R: usize, const C: usize> AssignComponentwiseOp<T, Rhs, Rhs> for Matrix<T, R, C>
+impl<Component, Input, const ROWS: usize, const COLUMNS: usize>
+    AssignComponentwiseOp<Component, Input, Input> for Matrix<Component, ROWS, COLUMNS>
 where
-    T: Copy,
-    Rhs: Copy,
+    Component: Copy,
+    Input: Copy,
 {
-    fn assign_componentwise_op(&mut self, rhs: Rhs, op: fn(&mut T, Rhs)) {
-        for column in 0..C {
-            for row in 0..R {
-                op(&mut self[(column, row)], rhs);
+    fn assign_componentwise_op(&mut self, input: Input, op: fn(&mut Component, Input)) {
+        for column in 0..COLUMNS {
+            for row in 0..ROWS {
+                op(&mut self[(column, row)], input);
             }
         }
     }

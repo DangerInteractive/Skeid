@@ -3,24 +3,25 @@ use crate::ops::componentwise::{AssignComponentwiseOp, ComponentwiseOp};
 use crate::vector::Vector;
 use std::ops::{Div, DivAssign};
 
-impl<T, const R: usize, By> Div<By> for Vector<T, R>
+impl<T, const ROWS: usize, Rhs> Div<Rhs> for Vector<T, ROWS>
 where
-    T: Copy + Div<By, Output = T>,
-    By: Scalar + Copy,
+    T: Copy + Div<Rhs>,
+    Rhs: Scalar + Copy,
+    <T as Div<Rhs>>::Output: Copy,
 {
-    type Output = Vector<T, R>;
+    type Output = Vector<<T as Div<Rhs>>::Output, ROWS>;
 
-    fn div(self, rhs: By) -> Self::Output {
+    fn div(self, rhs: Rhs) -> Self::Output {
         self.componentwise_op(rhs, move |lhs_value, rhs_value| lhs_value / rhs_value)
     }
 }
 
-impl<T, const R: usize, By> DivAssign<By> for Vector<T, R>
+impl<T, const ROWS: usize, Rhs> DivAssign<Rhs> for Vector<T, ROWS>
 where
-    T: Copy + DivAssign<By>,
-    By: Scalar + Copy,
+    T: Copy + DivAssign<Rhs>,
+    Rhs: Scalar + Copy,
 {
-    fn div_assign(&mut self, rhs: By) {
+    fn div_assign(&mut self, rhs: Rhs) {
         self.assign_componentwise_op(rhs, move |lhs_value, rhs_value| *lhs_value /= rhs_value)
     }
 }

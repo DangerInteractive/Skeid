@@ -13,14 +13,14 @@ mod scalar_subtract;
 mod subtract;
 
 #[derive(Copy, Clone)]
-pub struct Vector<T: Sized + Copy, const R: usize>([T; R]);
+pub struct Vector<T: Sized + Copy, const ROWS: usize>([T; ROWS]);
 
 pub type Vector2<T> = Vector<T, 2>;
 pub type Vector3<T> = Vector<T, 3>;
 pub type Vector4<T> = Vector<T, 4>;
 
-impl<T: Sized + Copy, const R: usize> Vector<T, R> {
-    pub fn from_array(array: [T; R]) -> Self {
+impl<T: Sized + Copy, const ROWS: usize> Vector<T, ROWS> {
+    pub fn from_array(array: [T; ROWS]) -> Self {
         Vector(array)
     }
 
@@ -29,7 +29,7 @@ impl<T: Sized + Copy, const R: usize> Vector<T, R> {
         T: Into<f64>,
     {
         let mut sum = 0.0;
-        for i in 0..R {
+        for i in 0..ROWS {
             let x = self[i].into();
             sum += x.powi(2);
         }
@@ -41,7 +41,7 @@ impl<T: Sized + Copy, const R: usize> Vector<T, R> {
         T: Into<f32>,
     {
         let mut sum = 0.0;
-        for i in 0..R {
+        for i in 0..ROWS {
             let x = self[i].into();
             sum += x.powi(2)
         }
@@ -65,7 +65,7 @@ impl<T: Sized + Copy, const R: usize> Vector<T, R> {
     pub fn normalize_f64(&self) -> Self
     where
         T: Div<f64> + Into<f64>,
-        Vector<T, R>: Div<f64, Output = Vector<T, R>>,
+        Vector<T, ROWS>: Div<f64, Output = Vector<T, ROWS>>,
     {
         *self / self.magnitude_f64()
     }
@@ -73,7 +73,7 @@ impl<T: Sized + Copy, const R: usize> Vector<T, R> {
     pub fn normalize_f32(&self) -> Self
     where
         T: Div<f32> + Into<f32>,
-        Vector<T, R>: Div<f32, Output = Vector<T, R>>,
+        Vector<T, ROWS>: Div<f32, Output = Vector<T, ROWS>>,
     {
         *self / self.magnitude_f32()
     }
@@ -81,7 +81,7 @@ impl<T: Sized + Copy, const R: usize> Vector<T, R> {
     pub fn into_normalized_f64(self) -> Self
     where
         T: Div<f64> + Into<f64>,
-        Vector<T, R>: Div<f64, Output = Vector<T, R>>,
+        Vector<T, ROWS>: Div<f64, Output = Vector<T, ROWS>>,
     {
         self / self.magnitude_f64()
     }
@@ -89,7 +89,7 @@ impl<T: Sized + Copy, const R: usize> Vector<T, R> {
     pub fn into_normalized_f32(self) -> Self
     where
         T: Div<f32> + Into<f32>,
-        Vector<T, R>: Div<f32, Output = Vector<T, R>>,
+        Vector<T, ROWS>: Div<f32, Output = Vector<T, ROWS>>,
     {
         self / self.magnitude_f32()
     }
@@ -97,7 +97,7 @@ impl<T: Sized + Copy, const R: usize> Vector<T, R> {
     pub fn assign_normalized_f64(&mut self)
     where
         T: Div<f64> + Into<f64>,
-        Vector<T, R>: DivAssign<f64>,
+        Vector<T, ROWS>: DivAssign<f64>,
     {
         *self /= self.magnitude_f64();
     }
@@ -105,7 +105,7 @@ impl<T: Sized + Copy, const R: usize> Vector<T, R> {
     pub fn assign_normalized_f32(&mut self)
     where
         T: Div<f32> + Into<f32>,
-        Vector<T, R>: DivAssign<f32>,
+        Vector<T, ROWS>: DivAssign<f32>,
     {
         *self /= self.magnitude_f32();
     }
