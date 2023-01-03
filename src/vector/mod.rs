@@ -4,6 +4,7 @@ mod add;
 mod componentwise;
 mod componentwise_scalar;
 mod divide;
+mod dot;
 mod index;
 mod multiply;
 mod scalar_add;
