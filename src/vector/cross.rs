@@ -4,10 +4,11 @@ use std::ops::{Mul, Sub};
 
 impl<T> Cross for Vector<T, 3>
 where
-    T: Copy + Mul<T, Output = T>,
-    <T as Mul>::Output: Sub<T, Output = T>,
+    T: Copy + Mul,
+    <T as Mul>::Output: Sub,
+    <<T as Mul>::Output as Sub>::Output: Copy,
 {
-    type Output = Self;
+    type Output = Vector<<<T as Mul>::Output as Sub>::Output, 3>;
 
     fn cross(self, rhs: Self) -> Self::Output {
         Vector::from_array([
