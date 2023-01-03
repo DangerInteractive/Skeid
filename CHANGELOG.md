@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2023-01-03
+
+### Added
+
+- `Pow` trait for types that can be exponentiated
+- `Sqrt` trait for types from which a square root can be calculated
+
+### Changed
+
+- `magnitude`, `magnitude_squared`, `normalize` and `assign_normalize` functions on Vectors made
+  more generic
+
 ## [0.8.0] - 2023-01-02
 
 ### Changed
@@ -22,9 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- DotAssign trait (dot product returns a scalar from two Vector/Matrix inputs, so it needs to be
+- `DotAssign` trait (dot product returns a scalar from two Vector/Matrix inputs, so it needs to be
   stored in a third memory location)
-- CrossAssign trait (since cross products intermingle each value with those of different indices
+- `CrossAssign` trait (since cross products intermingle each value with those of different indices
   in both vectors, it is impossible to store the calculations without putting them into an
   intermediate location first, which is the same as just using the Cross trait, so there's no
   need to repeat ourselves here)
@@ -45,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Traits for componentwise operations between types composed of multiple values of the same type
   (like Vector and Matrix)
 - Implementation for componentwise operator for Vector
-- Re-added Scalar marker type (turns out to be useful after all)
+- Re-added `Scalar` marker type (turns out to be useful after all)
 - Re-added addition and subtraction where left is a Vector and right is a Scalar
 - Re-added multiplication and division where both sides are Vectors
 
@@ -60,7 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- Scalar marker type
+- `Scalar` marker type
 
 ### Fixed
 
@@ -70,7 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial implementation of Matrix (just the struct for now)
+- Initial implementation of `Matrix` (just the struct for now)
 - Indexing operator for Vector
 - Scalar operators for Vector (such as adding a vector and a scalar, etc.)
 - Magnitude squared function, for when you want to skip the expensive
@@ -79,7 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- rename \*_vector_op to \*_componentwise_op to be more consistent with math terminology
+- rename `*_vector_op` to `*_componentwise_op` to be more consistent with math terminology
 
 ### Removed
 
@@ -101,5 +113,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial implementation of the Vector type
+- Initial implementation of the `Vector` type
 
