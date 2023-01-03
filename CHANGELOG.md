@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2023-01-02
+
+### Changed
+
+- Make cross product output type as flexible as the other math operators
+
 ## [0.7.0] - 2023-01-02
 
 ### Added
