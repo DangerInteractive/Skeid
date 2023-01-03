@@ -1,4 +1,5 @@
-use std::ops::{Div, DivAssign};
+use crate::ops::sqrt::Sqrt;
+use std::ops::{AddAssign, Div, DivAssign, Mul};
 
 mod add;
 mod componentwise;
@@ -14,101 +15,56 @@ mod scalar_multiply;
 mod scalar_subtract;
 mod subtract;
 
-#[derive(Copy, Clone)]
+#[derive(Clone, Copy, Eq, PartialEq, Debug)]
 pub struct Vector<T: Sized + Copy, const ROWS: usize>([T; ROWS]);
 
 pub type Vector2<T> = Vector<T, 2>;
 pub type Vector3<T> = Vector<T, 3>;
 pub type Vector4<T> = Vector<T, 4>;
 
-impl<T: Sized + Copy, const ROWS: usize> Vector<T, ROWS> {
+impl<T, const ROWS: usize> Vector<T, ROWS>
+where
+    T: Sized + Copy,
+{
     pub fn from_array(array: [T; ROWS]) -> Self {
         Vector(array)
     }
 
-    pub fn magnitude_squared_f64(&self) -> f64
+    pub fn magnitude_squared<Output>(self) -> Output
     where
-        T: Into<f64>,
+        T: Into<Output>,
+        Output: Copy + Default + Mul + AddAssign<<Output as Mul>::Output>,
     {
-        let mut sum = 0.0;
+        let mut sum: Output = Default::default();
         for i in 0..ROWS {
             let x = self[i].into();
-            sum += x.powi(2);
+            sum += x * x;
         }
         sum
     }
 
-    pub fn magnitude_squared_f32(&self) -> f32
+    pub fn magnitude<Output>(self) -> <Output as Sqrt>::Output
     where
-        T: Into<f32>,
+        T: Into<Output>,
+        Output: Copy + Default + Mul + AddAssign<<Output as Mul>::Output> + Sqrt,
     {
-        let mut sum = 0.0;
-        for i in 0..ROWS {
-            let x = self[i].into();
-            sum += x.powi(2)
-        }
-        sum
+        self.magnitude_squared().sqrt()
     }
 
-    pub fn magnitude_f64(&self) -> f64
+    pub fn normalize<Output>(self) -> <Vector<T, ROWS> as Div<<Output as Sqrt>::Output>>::Output
     where
-        T: Into<f64>,
+        T: Into<Output>,
+        Output: AddAssign + Copy + Default + Div + Mul<Output = Output> + Sqrt,
+        Vector<T, ROWS>: Div<<Output as Sqrt>::Output>,
     {
-        self.magnitude_squared_f64().sqrt()
+        self / self.magnitude()
     }
 
-    pub fn magnitude_f32(&self) -> f32
+    pub fn assign_normalize(&mut self)
     where
-        T: Into<f32>,
+        T: AddAssign<<T as Mul>::Output> + Default + Div + Mul + Sqrt<Output = T>,
+        Vector<T, ROWS>: DivAssign<T>,
     {
-        self.magnitude_squared_f32().sqrt()
-    }
-
-    pub fn normalize_f64(&self) -> Self
-    where
-        T: Div<f64> + Into<f64>,
-        Vector<T, ROWS>: Div<f64, Output = Vector<T, ROWS>>,
-    {
-        *self / self.magnitude_f64()
-    }
-
-    pub fn normalize_f32(&self) -> Self
-    where
-        T: Div<f32> + Into<f32>,
-        Vector<T, ROWS>: Div<f32, Output = Vector<T, ROWS>>,
-    {
-        *self / self.magnitude_f32()
-    }
-
-    pub fn into_normalized_f64(self) -> Self
-    where
-        T: Div<f64> + Into<f64>,
-        Vector<T, ROWS>: Div<f64, Output = Vector<T, ROWS>>,
-    {
-        self / self.magnitude_f64()
-    }
-
-    pub fn into_normalized_f32(self) -> Self
-    where
-        T: Div<f32> + Into<f32>,
-        Vector<T, ROWS>: Div<f32, Output = Vector<T, ROWS>>,
-    {
-        self / self.magnitude_f32()
-    }
-
-    pub fn assign_normalized_f64(&mut self)
-    where
-        T: Div<f64> + Into<f64>,
-        Vector<T, ROWS>: DivAssign<f64>,
-    {
-        *self /= self.magnitude_f64();
-    }
-
-    pub fn assign_normalized_f32(&mut self)
-    where
-        T: Div<f32> + Into<f32>,
-        Vector<T, ROWS>: DivAssign<f32>,
-    {
-        *self /= self.magnitude_f32();
+        *self /= self.magnitude::<T>();
     }
 }
