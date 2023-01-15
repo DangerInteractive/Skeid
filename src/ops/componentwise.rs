@@ -1,4 +1,4 @@
-pub trait ComponentwiseOp<
+pub trait Componentwise<
     Component,
     Input = Component,
     InputComponent = Input,
@@ -7,13 +7,13 @@ pub trait ComponentwiseOp<
 {
     type Output;
 
-    fn componentwise_op(
+    fn componentwise(
         self,
         input: Input,
         op: fn(Component, InputComponent) -> OutputComponent,
     ) -> Self::Output;
 }
 
-pub trait AssignComponentwiseOp<Component, Input = Component, InputComponent = Input> {
-    fn assign_componentwise_op(&mut self, input: Input, op: fn(&mut Component, InputComponent));
+pub trait AssignComponentwise<Component, Input = Component, InputComponent = Input> {
+    fn assign_componentwise(&mut self, input: Input, op: fn(&mut Component, InputComponent));
 }

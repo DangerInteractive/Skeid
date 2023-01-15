@@ -1,4 +1,4 @@
-use crate::ops::componentwise::{AssignComponentwiseOp, ComponentwiseOp};
+use crate::ops::componentwise::{AssignComponentwise, Componentwise};
 use crate::vector::Vector;
 use std::ops::{Sub, SubAssign};
 
@@ -11,9 +11,7 @@ where
     type Output = Vector<<T as Sub<Rhs>>::Output, ROWS>;
 
     fn sub(self, rhs: Vector<Rhs, ROWS>) -> Self::Output {
-        self.componentwise_op(rhs, move |lhs_value: T, rhs_value: Rhs| {
-            lhs_value - rhs_value
-        })
+        self.componentwise(rhs, |lhs_value: T, rhs_value: Rhs| lhs_value - rhs_value)
     }
 }
 
@@ -23,7 +21,7 @@ where
     Rhs: Copy,
 {
     fn sub_assign(&mut self, rhs: Vector<Rhs, ROWS>) {
-        self.assign_componentwise_op(rhs, move |lhs_value: &mut T, rhs_value: Rhs| {
+        self.assign_componentwise(rhs, |lhs_value: &mut T, rhs_value: Rhs| {
             *lhs_value -= rhs_value
         })
     }

@@ -23,7 +23,11 @@ where
         Matrix(array)
     }
 
+    pub fn from_fn(func: fn(usize, usize) -> T) -> Self {
+        Matrix::from_array(from_fn(|column| from_fn(|row| func(row, column))))
+    }
+
     pub fn transpose(&self) -> Matrix<T, COLUMNS, ROWS> {
-        Matrix::from_array(from_fn(move |i| from_fn(move |j| self[(j, i)])))
+        Matrix::from_array(from_fn(|column| from_fn(|row| self[(row, column)])))
     }
 }
