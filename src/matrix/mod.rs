@@ -23,7 +23,7 @@ where
         Matrix(array)
     }
 
-    pub fn from_fn(func: fn(usize, usize) -> T) -> Self {
+    pub fn from_fn<F: FnMut(usize, usize) -> T>(mut func: F) -> Self {
         Matrix::from_array(from_fn(|column| from_fn(|row| func(row, column))))
     }
 

@@ -16,7 +16,7 @@ where
     fn componentwise<Op: FnMut(Component, InputComponent) -> OutputComponent>(
         self,
         input: Matrix<InputComponent, ROWS, COLUMNS>,
-        op: Op,
+        mut op: Op,
     ) -> Self::Output {
         Matrix::from_array(from_fn(|column| {
             from_fn(|row| op(self[(column, row)], input[(column, row)]))
@@ -35,7 +35,7 @@ where
     fn assign_componentwise<Op: FnMut(&mut Component, InputComponent)>(
         &mut self,
         input: Matrix<InputComponent, ROWS, COLUMNS>,
-        op: Op,
+        mut op: Op,
     ) {
         for column in 0..COLUMNS {
             for row in 0..ROWS {
