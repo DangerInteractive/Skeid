@@ -7,13 +7,17 @@ pub trait Componentwise<
 {
     type Output;
 
-    fn componentwise(
+    fn componentwise<Op: FnMut(Component, InputComponent) -> OutputComponent>(
         self,
         input: Input,
-        op: fn(Component, InputComponent) -> OutputComponent,
+        op: Op,
     ) -> Self::Output;
 }
 
 pub trait AssignComponentwise<Component, Input = Component, InputComponent = Input> {
-    fn assign_componentwise(&mut self, input: Input, op: fn(&mut Component, InputComponent));
+    fn assign_componentwise<Op: FnMut(&mut Component, InputComponent)>(
+        &mut self,
+        input: Input,
+        op: Op,
+    );
 }

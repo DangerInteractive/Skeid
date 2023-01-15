@@ -11,10 +11,10 @@ where
 {
     type Output = Matrix<OutputComponent, ROWS, COLUMNS>;
 
-    fn componentwise(
+    fn componentwise<Op: FnMut(Component, Input) -> OutputComponent>(
         self,
         input: Input,
-        op: fn(Component, Input) -> OutputComponent,
+        op: Op,
     ) -> Self::Output {
         Matrix::from_array(from_fn(|column| {
             from_fn(|row| op(self[(column, row)], input))
@@ -28,7 +28,7 @@ where
     Component: Copy,
     Input: Copy,
 {
-    fn assign_componentwise(&mut self, input: Input, op: fn(&mut Component, Input)) {
+    fn assign_componentwise<Op: FnMut(&mut Component, Input)>(&mut self, input: Input, op: Op) {
         for column in 0..COLUMNS {
             for row in 0..ROWS {
                 op(&mut self[(column, row)], input);

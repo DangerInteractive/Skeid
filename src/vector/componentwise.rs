@@ -13,10 +13,10 @@ where
 {
     type Output = Vector<OutputComponent, ROWS>;
 
-    fn componentwise(
+    fn componentwise<Op: FnMut(Component, InputComponent) -> OutputComponent>(
         self,
         input: Vector<InputComponent, ROWS>,
-        op: fn(Component, InputComponent) -> OutputComponent,
+        op: Op,
     ) -> Self::Output {
         Vector::from_array(from_fn(|row| op(self[row], input[row])))
     }
@@ -30,10 +30,10 @@ where
     Component: Copy,
     InputComponent: Copy,
 {
-    fn assign_componentwise(
+    fn assign_componentwise<Op: FnMut(&mut Component, InputComponent)>(
         &mut self,
         input: Vector<InputComponent, ROWS>,
-        op: fn(&mut Component, InputComponent),
+        op: Op,
     ) {
         for row in 0..ROWS {
             op(&mut self[row], input[row]);
