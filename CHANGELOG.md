@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.0] - 2023-01-15
+
+### Added
+
+- Matrix multiplication
+- `Matrix::from_fn` to create a matrix component-by-component via a function
+
+### Changed
+
+- `ComponentwiseOp` trait renamed to `Componentwise`, `componentwise_op` function to `componentwise`
+- `AssignComponentwiseOp` trait renamed to `AssignComponentwise`, `assign_componentwise_op`
+  function to `assign_componentwise_op`
+- Componentwise operator can use a closure with captured variables
+
 ## [0.9.0] - 2023-01-03
 
 ### Added
