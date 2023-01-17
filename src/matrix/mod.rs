@@ -30,6 +30,6 @@ where
     }
 
     pub fn transpose(&self) -> Matrix<T, COLUMNS, ROWS> {
-        Matrix::from_array(from_fn(|column| from_fn(|row| self[(row, column)])))
+        Matrix::from_fn(|row, column| self[(column, row)])
     }
 }
