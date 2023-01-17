@@ -27,7 +27,7 @@ impl<T, const ROWS: usize> Vector<T, ROWS>
 where
     T: Sized + Copy,
 {
-    pub fn from_array(array: [T; ROWS]) -> Self {
+    pub const fn from_array(array: [T; ROWS]) -> Self {
         Self(array)
     }
 

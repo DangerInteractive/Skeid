@@ -21,7 +21,7 @@ impl<T, const ROWS: usize, const COLUMNS: usize> Matrix<T, ROWS, COLUMNS>
 where
     T: Copy,
 {
-    pub fn from_array(array: [[T; ROWS]; COLUMNS]) -> Self {
+    pub const fn from_array(array: [[T; ROWS]; COLUMNS]) -> Self {
         Self(array)
     }
 
