@@ -1,4 +1,5 @@
 use crate::ops::sqrt::Sqrt;
+use std::array::from_fn;
 use std::ops::{AddAssign, Div, DivAssign, Mul};
 
 mod add;
@@ -28,6 +29,10 @@ where
 {
     pub fn from_array(array: [T; ROWS]) -> Self {
         Vector(array)
+    }
+
+    pub fn from_fn<F: FnMut(usize) -> T>(func: F) -> Self {
+        Vector::from_array(from_fn(func))
     }
 
     pub fn magnitude_squared<Output>(self) -> Output
