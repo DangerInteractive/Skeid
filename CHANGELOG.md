@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.0] - 2023-01-17
+
+### Added
+
+- Matrix to Vector multiplication
+- `Vector::from_fn` like `Matrix::from_fn`, to create a vector component-by-component via a function
+
 ## [0.10.0] - 2023-01-15
 
 ### Added

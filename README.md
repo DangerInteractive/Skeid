@@ -33,7 +33,7 @@ To install in your project, add it to your Cargo.toml as a dependency:
 
 ```toml
 [dependencies]
-skeid = "0.10.0"
+skeid = "0.11.0"
 ```
 
 Or run the following command from within your project directory:
