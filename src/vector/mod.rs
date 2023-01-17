@@ -28,7 +28,7 @@ where
     T: Sized + Copy,
 {
     pub fn from_array(array: [T; ROWS]) -> Self {
-        Vector(array)
+        Self(array)
     }
 
     pub fn from_fn<F: FnMut(usize) -> T>(func: F) -> Self {

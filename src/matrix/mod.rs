@@ -22,11 +22,11 @@ where
     T: Copy,
 {
     pub fn from_array(array: [[T; ROWS]; COLUMNS]) -> Self {
-        Matrix(array)
+        Self(array)
     }
 
     pub fn from_fn<F: FnMut(usize, usize) -> T>(mut func: F) -> Self {
-        Matrix::from_array(from_fn(|column| from_fn(|row| func(row, column))))
+        Self::from_array(from_fn(|column| from_fn(|row| func(row, column))))
     }
 
     pub fn transpose(&self) -> Matrix<T, COLUMNS, ROWS> {
