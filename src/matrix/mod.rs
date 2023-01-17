@@ -4,7 +4,7 @@ mod add;
 mod componentwise;
 mod componentwise_scalar;
 mod index;
-mod multiply;
+mod matrix_multiply;
 mod scalar_divide;
 mod scalar_multiply;
 mod subtract;

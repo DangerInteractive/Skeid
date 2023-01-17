@@ -1,3 +1,5 @@
+//! Operators to multiply two matrices together
+
 use crate::matrix::Matrix;
 use std::ops::{AddAssign, Mul};
 
@@ -14,7 +16,7 @@ where
         Matrix::from_fn(|row, column| {
             let mut sum = Default::default();
             for k in 0..LHS_COLUMNS {
-                sum += self[(row, k)] * rhs[(k, column)]
+                sum += self[(row, k)] * rhs[(k, column)];
             }
             sum
         })
