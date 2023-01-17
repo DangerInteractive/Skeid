@@ -8,6 +8,7 @@ mod matrix_multiply;
 mod scalar_divide;
 mod scalar_multiply;
 mod subtract;
+mod vector_multiply;
 
 #[derive(Copy, Clone)]
 pub struct Matrix<T: Sized + Copy, const ROWS: usize, const COLUMNS: usize>([[T; ROWS]; COLUMNS]);
