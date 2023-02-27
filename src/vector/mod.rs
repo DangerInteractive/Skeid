@@ -6,6 +6,7 @@ mod add;
 mod componentwise;
 mod componentwise_scalar;
 mod cross;
+mod default;
 mod divide;
 mod dot;
 mod index;
