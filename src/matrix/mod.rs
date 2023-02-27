@@ -3,6 +3,7 @@ use std::array::from_fn;
 mod add;
 mod componentwise;
 mod componentwise_scalar;
+mod default;
 mod index;
 mod matrix_multiply;
 mod scalar_divide;
