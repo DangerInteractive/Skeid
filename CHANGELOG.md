@@ -7,18 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.0] - 2023-02-26
+
+### Added
+- Functions to create matrices and vectors from a single value
+- Functions to create zero and identity matrices
+- Function to create zero vectors
+- `Default` implemented for `Vector` and `Matrix`
+- `Scalar` marker implemented for `isize` and `usize`
+
+### Changed
+- `Matrix::from_array` and `Vector::from_array` are now const
+
 ## [0.11.0] - 2023-01-17
 
 ### Added
 
-- Matrix to Vector multiplication
+- `Matrix` to `Vector` multiplication
 - `Vector::from_fn` like `Matrix::from_fn`, to create a vector component-by-component via a function
 
 ## [0.10.0] - 2023-01-15
 
 ### Added
 
-- Matrix multiplication
+- `Matrix` multiplication
 - `Matrix::from_fn` to create a matrix component-by-component via a function
 
 ### Changed
