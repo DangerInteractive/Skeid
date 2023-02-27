@@ -27,6 +27,11 @@ where
         Self(array)
     }
 
+    /// create a matrix where all elements are a given value
+    pub const fn from_value(value: T) -> Self {
+        Self::from_array([[value; ROWS]; COLUMNS])
+    }
+
     /// create a matrix element-by-element via a callback function
     /// that takes the index of the row and column and returns the value to be initialized at that position
     pub fn from_fn<F: FnMut(usize, usize) -> T>(mut func: F) -> Self {
@@ -49,7 +54,7 @@ where
 {
     /// get an instance of a zero matrix
     pub fn zero() -> Self {
-        Self::from_array([[T::from(0); ROWS]; COLUMNS])
+        Self::from_value(T::from(0))
     }
 }
 

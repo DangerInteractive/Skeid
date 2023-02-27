@@ -5,6 +5,6 @@ where
     T: Copy + Default,
 {
     fn default() -> Self {
-        Matrix::from_array([[Default::default(); ROWS]; COLUMNS])
+        Matrix::from_value(Default::default())
     }
 }
