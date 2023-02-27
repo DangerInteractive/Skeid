@@ -77,3 +77,12 @@ where
         *self /= self.magnitude::<T>();
     }
 }
+
+impl<T, const ROWS: usize> Vector<T, ROWS>
+where
+    T: Copy + From<i8>,
+{
+    pub fn zero() -> Self {
+        Self::from_value(T::from(0))
+    }
+}
