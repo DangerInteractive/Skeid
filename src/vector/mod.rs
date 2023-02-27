@@ -31,6 +31,10 @@ where
         Self(array)
     }
 
+    pub const fn from_value(value: T) -> Self {
+        Self::from_array([value; ROWS])
+    }
+
     pub fn from_fn<F: FnMut(usize) -> T>(func: F) -> Self {
         Vector::from_array(from_fn(func))
     }
