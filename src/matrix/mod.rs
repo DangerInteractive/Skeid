@@ -11,7 +11,7 @@ mod scalar_multiply;
 mod subtract;
 mod vector_multiply;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Matrix<T: Sized + Copy, const ROWS: usize, const COLUMNS: usize>([[T; ROWS]; COLUMNS]);
 
 pub type Matrix2<T> = Matrix<T, 2, 2>;

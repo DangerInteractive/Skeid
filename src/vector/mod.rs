@@ -17,7 +17,7 @@ mod scalar_multiply;
 mod scalar_subtract;
 mod subtract;
 
-#[derive(Clone, Copy, Eq, PartialEq, Debug)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Vector<T: Sized + Copy, const ROWS: usize>([T; ROWS]);
 
 pub type Vector2<T> = Vector<T, 2>;
