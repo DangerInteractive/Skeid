@@ -43,9 +43,9 @@ where
     pub fn magnitude_squared<Output>(self) -> Output
     where
         T: Into<Output>,
-        Output: Copy + Default + Mul + AddAssign<<Output as Mul>::Output>,
+        Output: Copy + From<i8> + Mul + AddAssign<<Output as Mul>::Output>,
     {
-        let mut sum: Output = Default::default();
+        let mut sum = Output::from(0);
         for i in 0..ROWS {
             let x = self[i].into();
             sum += x * x;
@@ -56,7 +56,7 @@ where
     pub fn magnitude<Output>(self) -> <Output as Sqrt>::Output
     where
         T: Into<Output>,
-        Output: Copy + Default + Mul + AddAssign<<Output as Mul>::Output> + Sqrt,
+        Output: Copy + From<i8> + Mul + AddAssign<<Output as Mul>::Output> + Sqrt,
     {
         self.magnitude_squared().sqrt()
     }
