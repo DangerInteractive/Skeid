@@ -64,7 +64,7 @@ where
     pub fn normalize<Output>(self) -> <Vector<T, ROWS> as Div<<Output as Sqrt>::Output>>::Output
     where
         T: Into<Output>,
-        Output: AddAssign + Copy + Default + Div + Mul<Output = Output> + Sqrt,
+        Output: AddAssign + Copy + Div + From<i8> + Mul<Output = Output> + Sqrt,
         Vector<T, ROWS>: Div<<Output as Sqrt>::Output>,
     {
         self / self.magnitude()
@@ -72,7 +72,7 @@ where
 
     pub fn assign_normalize(&mut self)
     where
-        T: AddAssign<<T as Mul>::Output> + Default + Div + Mul + Sqrt<Output = T>,
+        T: AddAssign<<T as Mul>::Output> + Div + From<i8> + Mul + Sqrt<Output = T>,
         Vector<T, ROWS>: DivAssign<T>,
     {
         *self /= self.magnitude::<T>();
