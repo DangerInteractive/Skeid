@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.0] - 2023-04-02
+
+### Added
+- Loads of documentation for basically everything
+- `#![must_use]` annotations on any methods that return a value and don't mutate an input
+
+### Changed
+- `Matrix` now implements `Eq` and `PartialEq`
+- Methods that need to initialize a `0`, `1`,
+  or `-1` value for a generic type now use `From<i8>` instead
+  of `Default` to do so
+- Linter now denies a lot more things
+
 ## [0.12.0] - 2023-02-26
 
 ### Added
