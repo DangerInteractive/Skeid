@@ -1,8 +1,10 @@
-/// The cross product operator (for vector/matrix math)
+//! math operator for calculating cross products (for linear algebra)
+
+/// math operator for calculating cross products (for linear algebra)
 pub trait Cross<Rhs = Self> {
-    /// The resulting type after applying the cross product operator
+    /// the type returned by [Cross::cross](Cross::cross)
     type Output;
 
-    /// Performs the cross product operation
+    /// calculate cross product
     fn cross(self, rhs: Rhs) -> Self::Output;
 }

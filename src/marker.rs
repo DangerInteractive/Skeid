@@ -1,3 +1,6 @@
+//! marker traits
+
+/// marks a type as being usable as a scalar in linear algebra
 pub trait Scalar {}
 
 impl Scalar for f64 {}

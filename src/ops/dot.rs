@@ -1,8 +1,10 @@
-/// The dot product operator (for vector/matrix math)
+//! math operator for calculating dot products (for linear algebra)
+
+/// math operator for calculating dot products (for linear algebra)
 pub trait Dot<Rhs = Self> {
-    /// The resulting type after applying the dot product operator
+    /// the type returned by [Dot::dot](Dot::dot)
     type Output;
 
-    /// Performs the dot product operation
+    /// calculate dot product
     fn dot(self, rhs: Rhs) -> Self::Output;
 }

@@ -1,3 +1,5 @@
+//! vector math
+
 use crate::ops::sqrt::Sqrt;
 use std::array::from_fn;
 use std::ops::{AddAssign, Div, DivAssign, Mul};
@@ -17,29 +19,44 @@ mod scalar_multiply;
 mod scalar_subtract;
 mod subtract;
 
+/// a vector data structure, holding an array of numbers, used in linear algebra
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub struct Vector<T: Sized + Copy, const ROWS: usize>([T; ROWS]);
 
+/// a 2-element vector
 pub type Vector2<T> = Vector<T, 2>;
+
+/// a 3-element vector
 pub type Vector3<T> = Vector<T, 3>;
+
+/// a 4-element vector
 pub type Vector4<T> = Vector<T, 4>;
 
 impl<T, const ROWS: usize> Vector<T, ROWS>
 where
     T: Sized + Copy,
 {
+    /// create a vector from an array
+    #[must_use]
     pub const fn from_array(array: [T; ROWS]) -> Self {
         Self(array)
     }
 
+    /// create a vector where all elements are a given value
+    #[must_use]
     pub const fn from_value(value: T) -> Self {
         Self::from_array([value; ROWS])
     }
 
+    /// create a vector element-by-element via a callback function
+    /// that takes the index of the row and returns the value to be initialized at that position
+    #[must_use]
     pub fn from_fn<F: FnMut(usize) -> T>(func: F) -> Self {
         Vector::from_array(from_fn(func))
     }
 
+    /// calculate the squared magnitude of the vector, avoiding a costly square root calculation
+    #[must_use]
     pub fn magnitude_squared<Output>(self) -> Output
     where
         T: Into<Output>,
@@ -53,6 +70,8 @@ where
         sum
     }
 
+    /// calculate the magnitude of the vector
+    #[must_use]
     pub fn magnitude<Output>(self) -> <Output as Sqrt>::Output
     where
         T: Into<Output>,
@@ -61,6 +80,8 @@ where
         self.magnitude_squared().sqrt()
     }
 
+    /// normalize the vector
+    #[must_use]
     pub fn normalize<Output>(self) -> <Vector<T, ROWS> as Div<<Output as Sqrt>::Output>>::Output
     where
         T: Into<Output>,
@@ -70,7 +91,8 @@ where
         self / self.magnitude()
     }
 
-    pub fn assign_normalize(&mut self)
+    /// normalize the vector in place (without copying/allocating)
+    pub fn normalize_assign(&mut self)
     where
         T: AddAssign<<T as Mul>::Output> + Div + From<i8> + Mul + Sqrt<Output = T>,
         Vector<T, ROWS>: DivAssign<T>,
@@ -83,6 +105,8 @@ impl<T, const ROWS: usize> Vector<T, ROWS>
 where
     T: Copy + From<i8>,
 {
+    /// get an instance of a zero vector (all elements contain 0)
+    #[must_use]
     pub fn zero() -> Self {
         Self::from_value(T::from(0))
     }

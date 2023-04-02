@@ -1,6 +1,11 @@
+//! math operator for exponentiation
+
+/// math operator for exponentiation
 pub trait Pow<T> {
+    /// the type returned by [Pow::pow](Pow::pow)
     type Output;
 
+    /// calculate exponentiation, with `self` as the base, and taking an exponent as an argument
     fn pow(self, pow: T) -> Self::Output;
 }
 

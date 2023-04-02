@@ -1,4 +1,4 @@
-use crate::ops::dot::{Dot};
+use crate::ops::dot::Dot;
 use crate::vector::Vector;
 use std::ops::{AddAssign, Mul};
 
