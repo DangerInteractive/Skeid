@@ -111,3 +111,24 @@ where
         Self::from_value(T::from(0))
     }
 }
+
+// TODO: test vector addition laws
+// Associative law: | (a+b)+c = a+(b+c)
+// Commutative law: | a+b = b+a
+
+// TODO: test scalar-vector multiplication laws
+// Associative law:  | (st)a=s(ta)
+// Commutative law:  | ta = at
+// Distributive law: | t(a+b) = ta + tb, (s+t)a = sa + ta
+
+// TODO: test dot product laws for vectors
+// Commutative law:      | a·b = b·a
+// Distributive law:     | a·(b+c) = a·b+a·c
+// Scalar factorization: | (ta)·b = a·(tb) = t(a·b)
+
+// TODO: test cross product laws for vectors
+// Anti-commutativity:    | a×b = -b×a
+// Distributive law:      | a×(b+c) = a×b+a×c
+// Scalar factorization:  | (ta)×b = a×(tb) = t(a×b)
+// Vector triple product: | a×(b×c) = b(a·c)-c(a·b)
+// Lagrange's identity:   | (a×b)² = a²b²-(a·b)²

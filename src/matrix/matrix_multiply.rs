@@ -22,3 +22,71 @@ where
         })
     }
 }
+
+#[test]
+fn associative_law() {
+    let matrix_a = Matrix::<i32, 3, 3>::from_array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+    let matrix_b = Matrix::<i32, 3, 3>::from_array([[10, 11, 12], [13, 14, 15], [16, 17, 19]]);
+    let matrix_c = Matrix::<i32, 3, 3>::from_array([[19, 20, 21], [22, 23, 24], [25, 26, 27]]);
+
+    assert_eq!(
+        (matrix_a * matrix_b) * matrix_c,
+        matrix_a * (matrix_b * matrix_c),
+        "Matrix-Matrix multiplication obeys associative law: (AB)C = A(BC)"
+    );
+}
+
+#[test]
+fn distributive_law() {
+    let matrix_a = Matrix::<i32, 3, 3>::from_array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+    let matrix_b = Matrix::<i32, 3, 3>::from_array([[10, 11, 12], [13, 14, 15], [16, 17, 19]]);
+    let matrix_c = Matrix::<i32, 3, 3>::from_array([[19, 20, 21], [22, 23, 24], [25, 26, 27]]);
+
+    assert_eq!(
+        matrix_a * (matrix_b + matrix_c),
+        (matrix_a * matrix_b) + (matrix_a * matrix_c),
+        "Matrix-Matrix multiplication obeys distributive law variation 1: A(B+C) = AB+AC"
+    );
+
+    assert_eq!(
+        (matrix_a + matrix_b) * matrix_c,
+        (matrix_a * matrix_c) + (matrix_b * matrix_c),
+        "Matrix-Matrix multiplication obeys distributive law variation 2: (A+B)C = AC+BC"
+    );
+}
+
+#[test]
+fn scalar_factorization() {
+    let matrix_a = Matrix::<i32, 3, 3>::from_array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+    let matrix_b = Matrix::<i32, 3, 3>::from_array([[10, 11, 12], [13, 14, 15], [16, 17, 19]]);
+    let scalar_t = 123;
+
+    let result_1 = matrix_a * (matrix_b * scalar_t);
+    let result_2 = matrix_b * (matrix_a * scalar_t);
+    let result_3 = (matrix_a * matrix_b) * scalar_t;
+
+    assert_eq!(
+        result_1, result_2,
+        "Matrix-Matrix multiplication obeys scalar factorization variation 1: A(Bt) = B(At)"
+    );
+    assert_eq!(
+        result_2, result_3,
+        "Matrix-Matrix multiplication obeys scalar factorization variation 2: B(At) = (AB)t"
+    );
+    assert_eq!(
+        result_3, result_1,
+        "Matrix-Matrix multiplication obeys scalar factorization variation 3: (AB)t = A(Bt)"
+    );
+}
+
+#[test]
+fn product_rule_for_matrix_transpose() {
+    let matrix_a = Matrix::<i32, 3, 3>::from_array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+    let matrix_b = Matrix::<i32, 3, 3>::from_array([[10, 11, 12], [13, 14, 15], [16, 17, 19]]);
+
+    assert_eq!(
+        (matrix_a * matrix_b).transpose(),
+        matrix_a.transpose() * matrix_b.transpose(),
+        "Matrix-Matrix multiplication obeys the product rule for matrix transpose: (AB)ₜ = AₜBₜ"
+    )
+}
