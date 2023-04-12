@@ -16,7 +16,7 @@ where
         Matrix::from_fn(|row, column| {
             let mut sum = Default::default();
             for k in 0..LHS_COLUMNS {
-                sum += self[(row, k)] * rhs[(k, column)];
+                sum += self[(k, row)] * rhs[(column, k)];
             }
             sum
         })
@@ -24,9 +24,23 @@ where
 }
 
 #[test]
+fn known_product() {
+    let matrix_a = Matrix::<i32, 3, 3>::from_array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+    let matrix_b = Matrix::<i32, 3, 3>::from_array([[10, 11, 12], [13, 14, 15], [16, 17, 18]]);
+    let product =
+        Matrix::<i32, 3, 3>::from_array([[138, 171, 204], [174, 216, 258], [210, 261, 312]]);
+
+    assert_eq!(
+        matrix_a * matrix_b,
+        product,
+        "Matrix-Matrix multiplication matches known product"
+    );
+}
+
+#[test]
 fn associative_law() {
     let matrix_a = Matrix::<i32, 3, 3>::from_array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-    let matrix_b = Matrix::<i32, 3, 3>::from_array([[10, 11, 12], [13, 14, 15], [16, 17, 19]]);
+    let matrix_b = Matrix::<i32, 3, 3>::from_array([[10, 11, 12], [13, 14, 15], [16, 17, 18]]);
     let matrix_c = Matrix::<i32, 3, 3>::from_array([[19, 20, 21], [22, 23, 24], [25, 26, 27]]);
 
     assert_eq!(
