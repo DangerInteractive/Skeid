@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.0] - 2022-04-11
+
+### Added
+- Unit tests for Matrix-Matrix and Matrix-Scalar multiplication
+
+### Fixed
+- Matrix-Matrix multiplication was incorrect due to reversing rows and columns in the operation
+
 ## [0.13.0] - 2023-04-02
 
 ### Added
