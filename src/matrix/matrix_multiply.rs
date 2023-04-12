@@ -53,7 +53,7 @@ fn associative_law() {
 #[test]
 fn distributive_law() {
     let matrix_a = Matrix::<i32, 3, 3>::from_array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-    let matrix_b = Matrix::<i32, 3, 3>::from_array([[10, 11, 12], [13, 14, 15], [16, 17, 19]]);
+    let matrix_b = Matrix::<i32, 3, 3>::from_array([[10, 11, 12], [13, 14, 15], [16, 17, 18]]);
     let matrix_c = Matrix::<i32, 3, 3>::from_array([[19, 20, 21], [22, 23, 24], [25, 26, 27]]);
 
     assert_eq!(
@@ -72,31 +72,31 @@ fn distributive_law() {
 #[test]
 fn scalar_factorization() {
     let matrix_a = Matrix::<i32, 3, 3>::from_array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-    let matrix_b = Matrix::<i32, 3, 3>::from_array([[10, 11, 12], [13, 14, 15], [16, 17, 19]]);
+    let matrix_b = Matrix::<i32, 3, 3>::from_array([[10, 11, 12], [13, 14, 15], [16, 17, 18]]);
     let scalar_t = 123;
 
-    let result_1 = matrix_a * (matrix_b * scalar_t);
-    let result_2 = matrix_b * (matrix_a * scalar_t);
+    let result_1 = (matrix_a * scalar_t) * matrix_b;
+    let result_2 = matrix_a * (matrix_b * scalar_t);
     let result_3 = (matrix_a * matrix_b) * scalar_t;
 
     assert_eq!(
         result_1, result_2,
-        "Matrix-Matrix multiplication obeys scalar factorization variation 1: A(Bt) = B(At)"
+        "Matrix-Matrix multiplication obeys scalar factorization variation 1: (At)B = A(Bt)"
     );
     assert_eq!(
         result_2, result_3,
-        "Matrix-Matrix multiplication obeys scalar factorization variation 2: B(At) = (AB)t"
+        "Matrix-Matrix multiplication obeys scalar factorization variation 2: A(Bt) = (AB)t"
     );
     assert_eq!(
         result_3, result_1,
-        "Matrix-Matrix multiplication obeys scalar factorization variation 3: (AB)t = A(Bt)"
+        "Matrix-Matrix multiplication obeys scalar factorization variation 3: (AB)t = (At)B"
     );
 }
 
 #[test]
 fn product_rule_for_matrix_transpose() {
     let matrix_a = Matrix::<i32, 3, 3>::from_array([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-    let matrix_b = Matrix::<i32, 3, 3>::from_array([[10, 11, 12], [13, 14, 15], [16, 17, 19]]);
+    let matrix_b = Matrix::<i32, 3, 3>::from_array([[10, 11, 12], [13, 14, 15], [16, 17, 18]]);
 
     assert_eq!(
         (matrix_a * matrix_b).transpose(),
