@@ -8,13 +8,13 @@ impl<LhsT, RhsT, const LHS_COLUMNS: usize, const LHS_ROWS: usize, const RHS_COLU
 where
     LhsT: Copy + Mul<RhsT>,
     RhsT: Copy,
-    <LhsT as Mul<RhsT>>::Output: AddAssign + Copy + Default,
+    <LhsT as Mul<RhsT>>::Output: AddAssign + Copy + From<i8>,
 {
     type Output = Matrix<<LhsT as Mul<RhsT>>::Output, LHS_ROWS, RHS_COLUMNS>;
 
     fn mul(self, rhs: Matrix<RhsT, LHS_COLUMNS, RHS_COLUMNS>) -> Self::Output {
         Matrix::from_fn(|row, column| {
-            let mut sum = Default::default();
+            let mut sum = From::from(0);
             for k in 0..LHS_COLUMNS {
                 sum += self[(k, row)] * rhs[(column, k)];
             }
