@@ -23,19 +23,31 @@ where
 }
 
 #[test]
-fn anti_commutativity() {
+fn self_cross() {
+    let vector_a = Vector::<i32, 3>::from_array([1, 2, 3]);
+    let vector_zero = Vector::<i32, 3>::zero();
+
+    assert_eq!(
+        vector_a.cross(vector_a),
+        vector_zero,
+        "The cross product of a vector with itself is the zero vector: a×a = 0"
+    );
+}
+
+#[test]
+fn anticommutativity() {
     let vector_a = Vector::<i32, 3>::from_array([1, 2, 3]);
     let vector_b = Vector::<i32, 3>::from_array([4, 5, 6]);
 
     assert_eq!(
         vector_a.cross(vector_b),
         -vector_b.cross(vector_a),
-        "Vector cross product obeys anti-commutativity: a×b = -b×a"
+        "Vector cross product is anticommutative: a×b = -b×a"
     );
 }
 
 #[test]
-fn distributive_law() {
+fn distributive_law_over_addition() {
     let vector_a = Vector::<i32, 3>::from_array([1, 2, 3]);
     let vector_b = Vector::<i32, 3>::from_array([4, 5, 6]);
     let vector_c = Vector::<i32, 3>::from_array([7, 8, 9]);
@@ -43,7 +55,37 @@ fn distributive_law() {
     assert_eq!(
         vector_a.cross(vector_b + vector_c),
         vector_a.cross(vector_b) + vector_a.cross(vector_c),
-        "Vector cross product obeys distributive law: a×(b+c) = a×b+a×c"
+        "Vector cross product obeys distributive law over addition: a×(b+c) = a×b+a×c"
+    );
+}
+
+#[test]
+fn jacobi_identity() {
+    let vector_a = Vector::<i32, 3>::from_array([1, 2, 3]);
+    let vector_b = Vector::<i32, 3>::from_array([4, 5, 6]);
+    let vector_c = Vector::<i32, 3>::from_array([7, 8, 9]);
+    let vector_zero = Vector::<i32, 3>::zero();
+
+    assert_eq!(
+        vector_a.cross(vector_b.cross(vector_c))
+            + vector_b.cross(vector_c.cross(vector_a))
+            + vector_c.cross(vector_a.cross(vector_b)),
+        vector_zero,
+        "Vector cross product obeys Jacobi identity: a×(b×c)+b×(c×a)+c×(a×b) = 0"
+    )
+}
+
+#[test]
+fn sum_of_two_cross_products_identity() {
+    let vector_a = Vector::<i32, 3>::from_array([1, 2, 3]);
+    let vector_b = Vector::<i32, 3>::from_array([4, 5, 6]);
+    let vector_c = Vector::<i32, 3>::from_array([7, 8, 9]);
+    let vector_d = Vector::<i32, 3>::from_array([10, 11, 12]);
+
+    assert_eq!(
+        vector_a.cross(vector_b) + vector_c.cross(vector_d),
+        (vector_a - vector_c).cross(vector_b - vector_d) + vector_a.cross(vector_d) + vector_c.cross(vector_b),
+        "Vector cross product obeys identity for sum of two cross products: a×b+c×d = (a-c)×(b-d)+a×d+c×b"
     );
 }
 
