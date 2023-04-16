@@ -26,3 +26,28 @@ where
         })
     }
 }
+
+#[test]
+fn associative_law() {
+    let vector_a = Vector::<i32, 3>::from_array([1, 2, 3]);
+    let vector_b = Vector::<i32, 3>::from_array([4, 5, 6]);
+    let vector_c = Vector::<i32, 3>::from_array([7, 8, 9]);
+
+    assert_eq!(
+        (vector_a + vector_b) + vector_c,
+        vector_a + (vector_b + vector_c),
+        "Vector-Vector addition obeys associative law: (a+b)+c = a+(b+c)"
+    )
+}
+
+#[test]
+fn commutative_law() {
+    let vector_a = Vector::<i32, 3>::from_array([1, 2, 3]);
+    let vector_b = Vector::<i32, 3>::from_array([4, 5, 6]);
+
+    assert_eq!(
+        vector_a + vector_b,
+        vector_b + vector_a,
+        "Vector-Vector addition obeys commutative law: a+b = b+a"
+    )
+}
