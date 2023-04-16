@@ -7,21 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.15.0] - 2022-04-15
+
+### Added
+
+- Unit tests for vector math
+- Negation operator for `Vector` (`Neg` trait)
+
 ## [0.14.0] - 2022-04-11
 
 ### Added
+
 - Unit tests for Matrix-Matrix and Matrix-Scalar multiplication
 
 ### Fixed
+
 - Matrix-Matrix multiplication was incorrect due to reversing rows and columns in the operation
 
 ## [0.13.0] - 2023-04-02
 
 ### Added
+
 - Loads of documentation for basically everything
 - `#![must_use]` annotations on any methods that return a value and don't mutate an input
 
 ### Changed
+
 - `Matrix` now implements `Eq` and `PartialEq`
 - Methods that need to initialize a `0`, `1`,
   or `-1` value for a generic type now use `From<i8>` instead
@@ -31,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.12.0] - 2023-02-26
 
 ### Added
+
 - Functions to create matrices and vectors from a single value
 - Functions to create zero and identity matrices
 - Function to create zero vectors
@@ -38,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Scalar` marker implemented for `isize` and `usize`
 
 ### Changed
+
 - `Matrix::from_array` and `Vector::from_array` are now const
 
 ## [0.11.0] - 2023-01-17
