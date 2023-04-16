@@ -13,6 +13,7 @@ mod divide;
 mod dot;
 mod index;
 mod multiply;
+mod neg;
 mod scalar_add;
 mod scalar_divide;
 mod scalar_multiply;
