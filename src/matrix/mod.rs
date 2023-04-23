@@ -8,6 +8,7 @@ mod componentwise_scalar;
 mod default;
 mod index;
 mod matrix_multiply;
+mod neg;
 mod scalar_divide;
 mod scalar_multiply;
 mod subtract;
