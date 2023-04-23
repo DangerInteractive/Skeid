@@ -7,14 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.15.0] - 2022-04-15
+## [0.16.0] - 2023-04-22
+
+### Added
+
+- Negation operator for `Matrix` (`Neg` trait)
+- Unit tests for negation of `Vector` and `Matrix`
+
+## [0.15.0] - 2023-04-15
 
 ### Added
 
 - Unit tests for vector math
 - Negation operator for `Vector` (`Neg` trait)
 
-## [0.14.0] - 2022-04-11
+## [0.14.0] - 2023-04-11
 
 ### Added
 
