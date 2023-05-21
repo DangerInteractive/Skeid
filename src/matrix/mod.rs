@@ -95,8 +95,10 @@ where
 /// A coordinate referring to an element of a `Matrix`
 #[derive(Copy, Clone, Debug, Default, Eq, PartialEq)]
 pub struct MatrixCoordinate {
-    column: usize,
-    row: usize,
+    /// 0-indexed column index for a matrix
+    pub column: usize,
+    /// 0-indexed row index for a matrix
+    pub row: usize,
 }
 
 impl MatrixCoordinate {

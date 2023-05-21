@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `row` and `column` fields of `MatrixCoordinate` are now public
+
 ## [0.17.0] - 2023-05-21
 
 ### Added
