@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Implemented `IntoIterator` for `Vector`s and references to `Vector`s.
+
 ## [0.16.0] - 2023-04-22
 
 ### Added

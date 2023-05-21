@@ -12,6 +12,7 @@ mod default;
 mod divide;
 mod dot;
 mod index;
+mod iterator;
 mod multiply;
 mod neg;
 mod scalar_add;
