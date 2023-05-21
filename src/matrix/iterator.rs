@@ -1,4 +1,5 @@
 use crate::matrix::{Matrix, MatrixCoordinate};
+use std::iter::FusedIterator;
 
 impl<T, const ROWS: usize, const COLUMNS: usize> IntoIterator for Matrix<T, ROWS, COLUMNS>
 where
@@ -51,6 +52,11 @@ where
 {
 }
 
+impl<T, const ROWS: usize, const COLUMNS: usize> FusedIterator for MatrixIterator<T, ROWS, COLUMNS> where
+    T: Copy
+{
+}
+
 impl<'a, T, const ROWS: usize, const COLUMNS: usize> IntoIterator for &'a Matrix<T, ROWS, COLUMNS>
 where
     T: Copy,
@@ -97,6 +103,13 @@ where
 }
 
 impl<T, const ROWS: usize, const COLUMNS: usize> ExactSizeIterator
+    for MatrixRefIterator<'_, T, ROWS, COLUMNS>
+where
+    T: Copy,
+{
+}
+
+impl<T, const ROWS: usize, const COLUMNS: usize> FusedIterator
     for MatrixRefIterator<'_, T, ROWS, COLUMNS>
 where
     T: Copy,

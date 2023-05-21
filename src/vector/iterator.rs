@@ -1,4 +1,5 @@
 use crate::vector::Vector;
+use std::iter::FusedIterator;
 
 impl<T, const ROWS: usize> IntoIterator for Vector<T, ROWS>
 where
@@ -44,6 +45,8 @@ where
 
 impl<T, const ROWS: usize> ExactSizeIterator for VectorIterator<T, ROWS> where T: Copy {}
 
+impl<T, const ROWS: usize> FusedIterator for VectorIterator<T, ROWS> where T: Copy {}
+
 impl<'a, T, const ROWS: usize> IntoIterator for &'a Vector<T, ROWS>
 where
     T: Copy,
@@ -84,3 +87,5 @@ where
 }
 
 impl<T, const ROWS: usize> ExactSizeIterator for VectorRefIterator<'_, T, ROWS> where T: Copy {}
+
+impl<T, const ROWS: usize> FusedIterator for VectorRefIterator<'_, T, ROWS> where T: Copy {}

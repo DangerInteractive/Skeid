@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `row` and `column` fields of `MatrixCoordinate` are now public
+- `VectorIterator`, `VectorRefIterator`, `MatrixIterator`, and `MatrixRefIterator` now implement
+  `FusedIterator` for optimization purposes
 
 ## [0.17.0] - 2023-05-21
 
