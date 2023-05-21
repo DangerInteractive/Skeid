@@ -36,7 +36,13 @@ where
         self.row += 1;
         Some(value)
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (ROWS, Some(ROWS))
+    }
 }
+
+impl<T, const ROWS: usize> ExactSizeIterator for VectorIterator<T, ROWS> where T: Copy {}
 
 impl<'a, T, const ROWS: usize> IntoIterator for &'a Vector<T, ROWS>
 where
@@ -71,4 +77,10 @@ where
         self.row += 1;
         Some(value)
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (ROWS, Some(ROWS))
+    }
 }
+
+impl<T, const ROWS: usize> ExactSizeIterator for VectorRefIterator<'_, T, ROWS> where T: Copy {}
