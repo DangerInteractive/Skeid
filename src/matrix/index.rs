@@ -1,23 +1,27 @@
-use crate::matrix::Matrix;
+use crate::matrix::{Matrix, MatrixCoordinate};
 use std::ops::{Index, IndexMut};
 
-impl<T, const ROWS: usize, const COLUMNS: usize> Index<(usize, usize)> for Matrix<T, ROWS, COLUMNS>
+impl<T, const ROWS: usize, const COLUMNS: usize> Index<MatrixCoordinate>
+    for Matrix<T, ROWS, COLUMNS>
 where
     T: Copy,
 {
     type Output = T;
 
-    fn index(&self, (column, row): (usize, usize)) -> &Self::Output {
+    fn index(&self, MatrixCoordinate { column, row }: MatrixCoordinate) -> &Self::Output {
         &self.0[column][row]
     }
 }
 
-impl<T, const ROWS: usize, const COLUMNS: usize> IndexMut<(usize, usize)>
+impl<T, const ROWS: usize, const COLUMNS: usize> IndexMut<MatrixCoordinate>
     for Matrix<T, ROWS, COLUMNS>
 where
     T: Copy,
 {
-    fn index_mut(&mut self, (column, row): (usize, usize)) -> &mut Self::Output {
+    fn index_mut(
+        &mut self,
+        MatrixCoordinate { column, row }: MatrixCoordinate,
+    ) -> &mut Self::Output {
         &mut self.0[column][row]
     }
 }

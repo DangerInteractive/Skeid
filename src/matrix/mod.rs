@@ -7,6 +7,7 @@ mod componentwise;
 mod componentwise_scalar;
 mod default;
 mod index;
+mod iterator;
 mod matrix_multiply;
 mod neg;
 mod scalar_divide;
@@ -53,7 +54,7 @@ where
     /// transpose the matrix
     #[must_use]
     pub fn transpose(&self) -> Matrix<T, COLUMNS, ROWS> {
-        Matrix::from_fn(|row, column| self[(column, row)])
+        Matrix::from_fn(|row, column| self[MatrixCoordinate::new(column, row)])
     }
 }
 
@@ -85,8 +86,45 @@ where
     pub fn identity() -> Self {
         let mut identity_matrix = Self::zero();
         for index in 0..SIZE {
-            identity_matrix[(index, index)] = T::from(1);
+            identity_matrix[MatrixCoordinate::new(index, index)] = T::from(1);
         }
         identity_matrix
+    }
+}
+
+/// A coordinate referring to an element of a `Matrix`
+#[derive(Copy, Clone, Debug, Default, Eq, PartialEq)]
+pub struct MatrixCoordinate {
+    column: usize,
+    row: usize,
+}
+
+impl MatrixCoordinate {
+    /// create a new coordinate
+    #[must_use]
+    pub const fn new(column: usize, row: usize) -> Self {
+        Self { column, row }
+    }
+
+    /// increment the coordinate by 1 row,
+    /// or move to the start of the next column if already at the end of the row
+    #[must_use]
+    pub const fn increment_by_row(self, rows: usize) -> Self {
+        if self.row == rows - 1 {
+            MatrixCoordinate::new(self.column + 1, 0)
+        } else {
+            MatrixCoordinate::new(self.column, self.row + 1)
+        }
+    }
+
+    /// increment the coordinate by 1 column,
+    /// or move to the start of the next row if already at the end of the column
+    #[must_use]
+    pub const fn increment_by_column(self, columns: usize) -> Self {
+        if self.column == columns - 1 {
+            MatrixCoordinate::new(0, self.row + 1)
+        } else {
+            MatrixCoordinate::new(self.column + 1, self.row)
+        }
     }
 }

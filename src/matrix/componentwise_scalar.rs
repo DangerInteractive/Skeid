@@ -1,4 +1,4 @@
-use crate::matrix::Matrix;
+use crate::matrix::{Matrix, MatrixCoordinate};
 use crate::ops::componentwise::{AssignComponentwise, Componentwise};
 use std::array::from_fn;
 
@@ -17,7 +17,7 @@ where
         mut op: Op,
     ) -> Self::Output {
         Matrix::from_array(from_fn(|column| {
-            from_fn(|row| op(self[(column, row)], input))
+            from_fn(|row| op(self[MatrixCoordinate::new(column, row)], input))
         }))
     }
 }
@@ -31,7 +31,7 @@ where
     fn assign_componentwise<Op: FnMut(&mut Component, Input)>(&mut self, input: Input, mut op: Op) {
         for column in 0..COLUMNS {
             for row in 0..ROWS {
-                op(&mut self[(column, row)], input);
+                op(&mut self[MatrixCoordinate::new(column, row)], input);
             }
         }
     }

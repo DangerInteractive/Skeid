@@ -1,6 +1,6 @@
 //! Operators to multiply a matrix by a vector
 
-use crate::matrix::Matrix;
+use crate::matrix::{Matrix, MatrixCoordinate};
 use crate::vector::Vector;
 use std::ops::{AddAssign, Mul};
 
@@ -17,7 +17,7 @@ where
         Vector::from_fn(|row| {
             let mut sum = Default::default();
             for k in 0..MATRIX_COLUMNS {
-                sum += self[(row, k)] * rhs[k];
+                sum += self[MatrixCoordinate::new(row, k)] * rhs[k];
             }
             sum
         })

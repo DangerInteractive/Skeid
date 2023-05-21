@@ -9,7 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Implemented `IntoIterator` for `Vector`s and references to `Vector`s.
+- `VectorIterator` and `VectorRefIterator` for iterating over `Vector`
+- Implemented `IntoIterator` for `Vector` and references to `Vector`
+- `MatrixIterator` and `MatrixRefIterator` for iterating (along rows) over `Matrix`
+- Implemented `IntoIterator` for `Matrix` and references to `Matrix`
+- `MatrixCoordinate` type
+
+### Changed
+
+- `Matrix` should now be indexed using `MatrixCoordinate` instead of a tuple (this makes it
+  clearer which is the row vs column)
 
 ## [0.16.0] - 2023-04-22
 
