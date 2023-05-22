@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- `VectorIndexIterator` trait (this was part of my original approach to index iterators that got
+  scrapped in favor of using the built-in iterator traits)
+
 ## [0.19.0] - 2023-05-22
 
 ### Added

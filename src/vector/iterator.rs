@@ -1,9 +1,6 @@
 use crate::vector::Vector;
 use std::iter::FusedIterator;
 
-/// an iterator that determines the order indices are returned by a `VectorIterator`
-pub trait VectorIndexIterator<const ROWS: usize>: Iterator<Item = usize> {}
-
 /// an implementation of `VectorIndexIterator`
 /// that starts at index 0 and moves forward until the last element
 #[derive(Debug)]
