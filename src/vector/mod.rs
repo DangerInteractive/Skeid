@@ -4,6 +4,9 @@ use crate::ops::sqrt::Sqrt;
 use std::array::from_fn;
 use std::ops::{AddAssign, Div, DivAssign, Mul};
 
+/// iterating over `Vector`s
+pub mod iterator;
+
 mod add;
 mod componentwise;
 mod componentwise_scalar;
@@ -12,7 +15,6 @@ mod default;
 mod divide;
 mod dot;
 mod index;
-mod iterator;
 mod multiply;
 mod neg;
 mod scalar_add;

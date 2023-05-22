@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Generic parameters on `Vector` iterators to allow customization of the order/set iterated
+
 ## [0.18.0] - 2023-05-21
 
 ### Changed
