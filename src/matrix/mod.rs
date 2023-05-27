@@ -8,7 +8,7 @@ mod componentwise;
 mod componentwise_scalar;
 mod default;
 mod index;
-mod iterator;
+pub mod iterator;
 mod matrix_multiply;
 mod neg;
 mod scalar_divide;
@@ -59,6 +59,7 @@ where
     }
 
     /// get a matrix iterator that uses a custom index iterator
+    #[must_use]
     pub const fn into_iter_for<I: Iterator<Item = MatrixCoordinate>>(
         self,
         coordinate_iterator: I,
@@ -70,6 +71,7 @@ where
     }
 
     /// get a matrix reference iterator that uses a custom index iterator
+    #[must_use]
     pub const fn as_iter_for<I: Iterator<Item = MatrixCoordinate>>(
         &self,
         coordinate_iterator: I,

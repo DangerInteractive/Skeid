@@ -1,4 +1,4 @@
-//! iterating over `Vector`s
+//! iterating over vectors
 
 use crate::vector::Vector;
 use std::iter::FusedIterator;

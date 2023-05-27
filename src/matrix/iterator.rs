@@ -1,3 +1,5 @@
+//! iterating over matrices
+
 use crate::matrix::{Matrix, MatrixCoordinate};
 use std::iter::FusedIterator;
 
@@ -12,6 +14,8 @@ pub struct MatrixAreaIterator {
 }
 
 impl MatrixAreaIterator {
+    /// construct a new MatrixAreaIterator given start and end coordinates
+    #[must_use]
     pub fn new(start: MatrixCoordinate, end: MatrixCoordinate) -> Self {
         Self {
             start,
@@ -56,6 +60,7 @@ impl DoubleEndedIterator for MatrixAreaIterator {
     }
 }
 
+/// an iterator for consuming the elements of a `Matrix`
 #[derive(Debug)]
 pub struct MatrixIterator<T, const ROWS: usize, const COLUMNS: usize, I>
 where
@@ -137,6 +142,7 @@ where
     }
 }
 
+/// an iterator for reading (by reference) the elements of a `Matrix`
 #[derive(Debug)]
 pub struct MatrixReferenceIterator<'a, T, const ROWS: usize, const COLUMNS: usize, I>
 where
