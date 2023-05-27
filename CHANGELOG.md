@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `into_iter_for` and `as_iter_for` methods on `Vector` and `Matrix` (to be able to choose custom 
+  indices to 
+  iterate)
+
+### Changed
+
+- `VectorRefIterator` and `MatrixRefIterator` renamed to `VectorReferenceIterator` and 
+  `MatrixReferenceIterator` respectively.
+- `VectorIterator`, `VectorReferenceIterator`, `MatrixIterator`, and `MatrixReferenceIterator` 
+  now use generic iterators for indices.
+
 ### Removed
 
 - `VectorIndexIterator` trait (this was part of my original approach to index iterators that got

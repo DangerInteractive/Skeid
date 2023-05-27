@@ -1,5 +1,6 @@
 //! matrix math
 
+use crate::matrix::iterator::{MatrixIterator, MatrixReferenceIterator};
 use std::array::from_fn;
 
 mod add;
@@ -56,6 +57,28 @@ where
     pub fn transpose(&self) -> Matrix<T, COLUMNS, ROWS> {
         Matrix::from_fn(|row, column| self[MatrixCoordinate::new(column, row)])
     }
+
+    /// get a matrix iterator that uses a custom index iterator
+    pub const fn into_iter_for<I: Iterator<Item = MatrixCoordinate>>(
+        self,
+        coordinate_iterator: I,
+    ) -> MatrixIterator<T, ROWS, COLUMNS, I> {
+        MatrixIterator {
+            matrix: self,
+            coordinate_iterator,
+        }
+    }
+
+    /// get a matrix reference iterator that uses a custom index iterator
+    pub const fn as_iter_for<I: Iterator<Item = MatrixCoordinate>>(
+        &self,
+        coordinate_iterator: I,
+    ) -> MatrixReferenceIterator<T, ROWS, COLUMNS, I> {
+        MatrixReferenceIterator {
+            matrix: self,
+            coordinate_iterator,
+        }
+    }
 }
 
 /// Matrices where `T` can be converted from an `i8`
@@ -106,27 +129,5 @@ impl MatrixCoordinate {
     #[must_use]
     pub const fn new(column: usize, row: usize) -> Self {
         Self { column, row }
-    }
-
-    /// increment the coordinate by 1 row,
-    /// or move to the start of the next column if already at the end of the row
-    #[must_use]
-    pub const fn increment_by_row(self, rows: usize) -> Self {
-        if self.row == rows - 1 {
-            MatrixCoordinate::new(self.column + 1, 0)
-        } else {
-            MatrixCoordinate::new(self.column, self.row + 1)
-        }
-    }
-
-    /// increment the coordinate by 1 column,
-    /// or move to the start of the next row if already at the end of the column
-    #[must_use]
-    pub const fn increment_by_column(self, columns: usize) -> Self {
-        if self.column == columns - 1 {
-            MatrixCoordinate::new(0, self.row + 1)
-        } else {
-            MatrixCoordinate::new(self.column + 1, self.row)
-        }
     }
 }

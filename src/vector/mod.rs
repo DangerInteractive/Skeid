@@ -1,11 +1,9 @@
 //! vector math
 
 use crate::ops::sqrt::Sqrt;
+use crate::vector::iterator::{VectorIterator, VectorReferenceIterator};
 use std::array::from_fn;
 use std::ops::{AddAssign, Div, DivAssign, Mul};
-
-/// iterating over `Vector`s
-pub mod iterator;
 
 mod add;
 mod componentwise;
@@ -15,6 +13,7 @@ mod default;
 mod divide;
 mod dot;
 mod index;
+pub mod iterator;
 mod multiply;
 mod neg;
 mod scalar_add;
@@ -102,6 +101,28 @@ where
         Vector<T, ROWS>: DivAssign<T>,
     {
         *self /= self.magnitude::<T>();
+    }
+
+    /// get a vector iterator that uses a custom index iterator
+    pub const fn into_iter_for<I: Iterator<Item = usize>>(
+        self,
+        row_iterator: I,
+    ) -> VectorIterator<T, ROWS, I> {
+        VectorIterator {
+            vector: self,
+            row_iterator,
+        }
+    }
+
+    /// get a vector reference iterator that uses a custom index iterator
+    pub const fn as_iter_for<I: Iterator<Item = usize>>(
+        &self,
+        row_iterator: I,
+    ) -> VectorReferenceIterator<T, ROWS, I> {
+        VectorReferenceIterator {
+            vector: self,
+            row_iterator,
+        }
     }
 }
 
