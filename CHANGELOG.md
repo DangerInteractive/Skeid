@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- More tests for `MatrixAreaIterator`
+
+### Fixed
+
+- `MatrixAreaIterator` was supposed to be inclusive of both the start and end coordinates, but
+  was excluding both the ending row and column instead
+- `MatrixAreaIterator` would sometimes panic when iterating in reverse due to subtracting from 0
+  for an unsigned integer
+- `MatrixAreaIterator::new` would sometimes panic for areas of certain dimensions due to using
+  the wrong dimension in a size calculation
+
 ## [0.20.1] - 2023-05-27
 
 ### Added

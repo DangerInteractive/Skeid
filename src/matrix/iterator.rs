@@ -19,8 +19,8 @@ impl MatrixAreaIterator {
     pub fn new(start: MatrixCoordinate, end: MatrixCoordinate) -> Self {
         Self {
             start,
-            row_size: (end.row - start.row),
-            size: (end.column - start.column) * (end.row - end.column),
+            row_size: 1 + (end.row - start.row),
+            size: (1 + (end.column - start.column)) * (1 + (end.row - start.row)),
             state: Some((0, 0)),
         }
     }
@@ -38,7 +38,7 @@ impl Iterator for MatrixAreaIterator {
             None => return None, // fused
         };
         self.state = match self.state {
-            Some((front, back)) if self.size - back > front => Some((front + 1, back)),
+            Some((front, back)) if self.size - back > front + 1 => Some((front + 1, back)),
             Some(_) => None, // trip fuse, the whole matrix has been iterated
             None => None,    // fused
         };
@@ -55,12 +55,15 @@ impl DoubleEndedIterator for MatrixAreaIterator {
         let next = match self.state {
             Some((_, back)) => {
                 let back_index = self.size - 1 - back;
-                MatrixCoordinate::new(back_index / self.row_size, back_index % self.row_size)
+                MatrixCoordinate::new(
+                    back_index / self.row_size + self.start.column,
+                    back_index % self.row_size + self.start.row,
+                )
             }
             None => return None, // fused
         };
         self.state = match self.state {
-            Some((front, back)) if self.size - back > front => Some((front, back + 1)),
+            Some((front, back)) if self.size - (back + 1) > front => Some((front, back + 1)),
             Some(_) => None, // trip fuse, the whole matrix has been iterated
             None => None,    // fused
         };
@@ -73,12 +76,181 @@ impl FusedIterator for MatrixAreaIterator {}
 impl ExactSizeIterator for MatrixAreaIterator {}
 
 #[test]
-fn matrix_area_iterator_iteration_order() {
-    MatrixAreaIterator::new(MatrixCoordinate::new(0, 0), MatrixCoordinate::new(3, 3))
-        .enumerate()
-        .for_each(|(i, coord)| {
-            assert_eq!(coord, MatrixCoordinate::new(i / 3, i % 3));
-        });
+fn matrix_area_iterator_order() {
+    // 3x3 matrix
+    assert_eq!(
+        9,
+        MatrixAreaIterator::new(MatrixCoordinate::new(0, 0), MatrixCoordinate::new(2, 2))
+            .enumerate()
+            .map(|(i, coord)| assert_eq!(
+                coord,
+                MatrixCoordinate::new(i / 3, i % 3),
+                "Incorrect coordinate for this iteration."
+            ))
+            .count(),
+        "Expected iterator for 3x3 matrix area to iterate 9 times."
+    );
+    // 3x4 matrix
+    assert_eq!(
+        12,
+        MatrixAreaIterator::new(MatrixCoordinate::new(0, 0), MatrixCoordinate::new(3, 2))
+            .enumerate()
+            .map(|(i, coord)| assert_eq!(
+                coord,
+                MatrixCoordinate::new(i / 3, i % 3),
+                "Incorrect coordinate for this iteration."
+            ))
+            .count(),
+        "Expected iterator for 3x4 matrix area to iterate 12 times."
+    );
+    // 4x3 matrix
+    assert_eq!(
+        12,
+        MatrixAreaIterator::new(MatrixCoordinate::new(0, 0), MatrixCoordinate::new(2, 3))
+            .enumerate()
+            .map(|(i, coord)| assert_eq!(
+                coord,
+                MatrixCoordinate::new(i / 4, i % 4),
+                "Incorrect coordinate for this iteration."
+            ))
+            .count(),
+        "Expected iterator for 4x3 matrix area to iterate 12 times."
+    );
+}
+
+#[test]
+fn matrix_area_iterator_with_non_zero_start() {
+    // 3x3 matrix
+    assert_eq!(
+        9,
+        MatrixAreaIterator::new(MatrixCoordinate::new(3, 5), MatrixCoordinate::new(5, 7))
+            .enumerate()
+            .map(|(i, coord)| assert_eq!(
+                coord,
+                MatrixCoordinate::new(i / 3 + 3, i % 3 + 5),
+                "Incorrect coordinate for this iteration."
+            ))
+            .count(),
+        "Expected iterator for 3x3 matrix area to iterate 9 times."
+    );
+    // 3x4 matrix
+    assert_eq!(
+        12,
+        MatrixAreaIterator::new(MatrixCoordinate::new(3, 5), MatrixCoordinate::new(6, 7))
+            .enumerate()
+            .map(|(i, coord)| assert_eq!(
+                coord,
+                MatrixCoordinate::new(i / 3 + 3, i % 3 + 5),
+                "Incorrect coordinate for this iteration."
+            ))
+            .count(),
+        "Expected iterator for 3x4 matrix area to iterate 12 times."
+    );
+    // 4x3 matrix
+    assert_eq!(
+        12,
+        MatrixAreaIterator::new(MatrixCoordinate::new(3, 5), MatrixCoordinate::new(5, 8))
+            .enumerate()
+            .map(|(i, coord)| assert_eq!(
+                coord,
+                MatrixCoordinate::new(i / 4 + 3, i % 4 + 5),
+                "Incorrect coordinate for this iteration."
+            ))
+            .count(),
+        "Expected iterator for 4x3 matrix area to iterate 12 times."
+    );
+}
+
+#[test]
+fn matrix_area_iterator_reversed_order() {
+    // 3x3 matrix
+    assert_eq!(
+        9,
+        MatrixAreaIterator::new(MatrixCoordinate::new(0, 0), MatrixCoordinate::new(2, 2))
+            .enumerate()
+            .rev()
+            .map(|(i, coord)| assert_eq!(
+                coord,
+                MatrixCoordinate::new(i / 3, i % 3),
+                "Incorrect coordinate for this iteration."
+            ))
+            .count(),
+        "Expected iterator for 3x3 matrix area to iterate 9 times."
+    );
+    // 3x4 matrix
+    assert_eq!(
+        12,
+        MatrixAreaIterator::new(MatrixCoordinate::new(0, 0), MatrixCoordinate::new(3, 2))
+            .enumerate()
+            .rev()
+            .map(|(i, coord)| assert_eq!(
+                coord,
+                MatrixCoordinate::new(i / 3, i % 3),
+                "Incorrect coordinate for this iteration."
+            ))
+            .count(),
+        "Expected iterator for 3x4 matrix area to iterate 12 times."
+    );
+    // 4x3 matrix
+    assert_eq!(
+        12,
+        MatrixAreaIterator::new(MatrixCoordinate::new(0, 0), MatrixCoordinate::new(2, 3))
+            .enumerate()
+            .rev()
+            .map(|(i, coord)| assert_eq!(
+                coord,
+                MatrixCoordinate::new(i / 4, i % 4),
+                "Incorrect coordinate for this iteration."
+            ))
+            .count(),
+        "Expected iterator for 4x3 matrix area to iterate 12 times."
+    );
+}
+
+#[test]
+fn matrix_area_iterator_reversed_with_non_zero_start() {
+    // 3x3 matrix
+    assert_eq!(
+        9,
+        MatrixAreaIterator::new(MatrixCoordinate::new(3, 5), MatrixCoordinate::new(5, 7))
+            .enumerate()
+            .rev()
+            .map(|(i, coord)| assert_eq!(
+                coord,
+                MatrixCoordinate::new(i / 3 + 3, i % 3 + 5),
+                "Incorrect coordinate for this iteration."
+            ))
+            .count(),
+        "Expected iterator for 3x3 matrix area to iterate 9 times."
+    );
+    // 3x4 matrix
+    assert_eq!(
+        12,
+        MatrixAreaIterator::new(MatrixCoordinate::new(3, 5), MatrixCoordinate::new(6, 7))
+            .enumerate()
+            .rev()
+            .map(|(i, coord)| assert_eq!(
+                coord,
+                MatrixCoordinate::new(i / 3 + 3, i % 3 + 5),
+                "Incorrect coordinate for this iteration."
+            ))
+            .count(),
+        "Expected iterator for 3x4 matrix area to iterate 12 times."
+    );
+    // 4x3 matrix
+    assert_eq!(
+        12,
+        MatrixAreaIterator::new(MatrixCoordinate::new(3, 5), MatrixCoordinate::new(5, 8))
+            .enumerate()
+            .rev()
+            .map(|(i, coord)| assert_eq!(
+                coord,
+                MatrixCoordinate::new(i / 4 + 3, i % 4 + 5),
+                "Incorrect coordinate for this iteration."
+            ))
+            .count(),
+        "Expected iterator for 4x3 matrix area to iterate 12 times."
+    );
 }
 
 /// an iterator for consuming the elements of a `Matrix`
