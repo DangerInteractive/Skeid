@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Tests for `MatrixAreaIterator`
+- Implemented `FusedIterator` and `ExactSizeIterator` for `MatrixAreaIterator`
+
+### Fixed
+
+- rewrote `MatrixAreaIterator` to simplify, to fix iterating 1 element past the last row in the area
+
 ## [0.20.0] - 2023-05-27
 
 ### Added

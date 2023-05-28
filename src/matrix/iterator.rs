@@ -8,9 +8,9 @@ use std::iter::FusedIterator;
 #[derive(Debug)]
 pub struct MatrixAreaIterator {
     start: MatrixCoordinate,
-    end: MatrixCoordinate,
-    front: MatrixCoordinate,
-    back: MatrixCoordinate,
+    row_size: usize,
+    size: usize,
+    state: Option<(usize, usize)>,
 }
 
 impl MatrixAreaIterator {
@@ -19,9 +19,9 @@ impl MatrixAreaIterator {
     pub fn new(start: MatrixCoordinate, end: MatrixCoordinate) -> Self {
         Self {
             start,
-            end,
-            front: start,
-            back: end,
+            row_size: (end.row - start.row),
+            size: (end.column - start.column) * (end.row - end.column),
+            state: Some((0, 0)),
         }
     }
 }
@@ -30,34 +30,55 @@ impl Iterator for MatrixAreaIterator {
     type Item = MatrixCoordinate;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let next = match self.front {
-            coord if coord.column < self.back.column => coord,
-            coord if coord.column == self.back.column && coord.row <= self.back.row => coord,
-            _ => return None, // we've iterated past the back
+        let next = match self.state {
+            Some((front, _)) => MatrixCoordinate::new(
+                front / self.row_size + self.start.column,
+                front % self.row_size + self.start.row,
+            ),
+            None => return None, // fused
         };
-        self.front = match self.front {
-            coord if coord.row < self.end.row => MatrixCoordinate::new(coord.column, coord.row + 1),
-            coord => MatrixCoordinate::new(coord.column + 1, self.start.row),
+        self.state = match self.state {
+            Some((front, back)) if self.size - back > front => Some((front + 1, back)),
+            Some(_) => None, // trip fuse, the whole matrix has been iterated
+            None => None,    // fused
         };
         Some(next)
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (self.size, Some(self.size))
     }
 }
 
 impl DoubleEndedIterator for MatrixAreaIterator {
     fn next_back(&mut self) -> Option<Self::Item> {
-        let next = match self.back {
-            coord if coord.column > self.front.column => coord,
-            coord if coord.column == self.front.column && coord.row >= self.back.row => coord,
-            _ => return None, // we've iterated past the front
-        };
-        self.back = match self.back {
-            coord if coord.row > self.start.row => {
-                MatrixCoordinate::new(coord.column, coord.row - 1)
+        let next = match self.state {
+            Some((_, back)) => {
+                let back_index = self.size - 1 - back;
+                MatrixCoordinate::new(back_index / self.row_size, back_index % self.row_size)
             }
-            coord => MatrixCoordinate::new(coord.column - 1, self.end.row),
+            None => return None, // fused
+        };
+        self.state = match self.state {
+            Some((front, back)) if self.size - back > front => Some((front, back + 1)),
+            Some(_) => None, // trip fuse, the whole matrix has been iterated
+            None => None,    // fused
         };
         Some(next)
     }
+}
+
+impl FusedIterator for MatrixAreaIterator {}
+
+impl ExactSizeIterator for MatrixAreaIterator {}
+
+#[test]
+fn matrix_area_iterator_iteration_order() {
+    MatrixAreaIterator::new(MatrixCoordinate::new(0, 0), MatrixCoordinate::new(3, 3))
+        .enumerate()
+        .for_each(|(i, coord)| {
+            assert_eq!(coord, MatrixCoordinate::new(i / 3, i % 3));
+        });
 }
 
 /// an iterator for consuming the elements of a `Matrix`
