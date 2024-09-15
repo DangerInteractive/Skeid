@@ -12,6 +12,7 @@ mod cross;
 mod default;
 mod divide;
 mod dot;
+mod from;
 mod index;
 pub mod iterator;
 mod multiply;
