@@ -13,10 +13,11 @@ where
     type Output = Matrix<<LhsT as Mul<RhsT>>::Output, LHS_ROWS, RHS_COLUMNS>;
 
     fn mul(self, rhs: Matrix<RhsT, LHS_COLUMNS, RHS_COLUMNS>) -> Self::Output {
-        Matrix::from_fn(|row, column| {
+        Matrix::from_fn(|coord| {
             let mut sum = From::from(0);
             for k in 0..LHS_COLUMNS {
-                sum += self[MatrixCoordinate::new(k, row)] * rhs[MatrixCoordinate::new(column, k)];
+                sum += self[MatrixCoordinate::new(k, coord.row)]
+                    * rhs[MatrixCoordinate::new(coord.column, k)];
             }
             sum
         })

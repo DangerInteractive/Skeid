@@ -48,14 +48,16 @@ where
     /// create a matrix element-by-element via a callback function
     /// that takes the index of the row and column and returns the value to be initialized at that position
     #[must_use]
-    pub fn from_fn<F: FnMut(usize, usize) -> T>(mut func: F) -> Self {
-        Self::from_array(from_fn(|column| from_fn(|row| func(row, column))))
+    pub fn from_fn<F: FnMut(MatrixCoordinate) -> T>(mut func: F) -> Self {
+        Self::from_array(from_fn(|column| {
+            from_fn(|row| func(MatrixCoordinate::new(column, row)))
+        }))
     }
 
     /// transpose the matrix
     #[must_use]
     pub fn transpose(&self) -> Matrix<T, COLUMNS, ROWS> {
-        Matrix::from_fn(|row, column| self[MatrixCoordinate::new(column, row)])
+        Matrix::from_fn(|coord| self[MatrixCoordinate::new(coord.column, coord.row)])
     }
 
     /// get a matrix iterator that uses a custom index iterator
