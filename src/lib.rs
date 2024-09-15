@@ -20,8 +20,6 @@
     overflowing_literals,
     path_statements,
     patterns_in_fns_without_body,
-    pointer_structural_match,
-    private_in_public,
     single_use_lifetimes,
     trivial_casts,
     trivial_numeric_casts,
@@ -39,7 +37,6 @@
     unused_parens,
     unused_qualifications,
     unused_results,
-    unused_tuple_struct_fields,
     variant_size_differences,
     while_true
 )]
