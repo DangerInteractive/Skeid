@@ -25,7 +25,8 @@ mod subtract;
 
 /// a vector data structure, holding an array of numbers, used in linear algebra
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub struct Vector<T: Sized + Copy, const ROWS: usize>([T; ROWS]);
+#[repr(transparent)]
+pub struct Vector<T: Copy, const ROWS: usize>([T; ROWS]);
 
 /// a 2-element vector
 pub type Vector2<T> = Vector<T, 2>;

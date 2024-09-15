@@ -18,6 +18,7 @@ mod vector_multiply;
 
 /// a matrix data structure holding a rectangular array or table of numbers, used in linear algebra
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[repr(transparent)]
 pub struct Matrix<T: Sized + Copy, const ROWS: usize, const COLUMNS: usize>([[T; ROWS]; COLUMNS]);
 
 /// a 2x2 matrix
