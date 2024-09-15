@@ -60,51 +60,6 @@ where
         Vector::from_array(from_fn(func))
     }
 
-    /// calculate the squared magnitude of the vector, avoiding a costly square root calculation
-    #[must_use]
-    pub fn magnitude_squared<Output>(self) -> Output
-    where
-        T: Into<Output>,
-        Output: Copy + From<i8> + Mul + AddAssign<<Output as Mul>::Output>,
-    {
-        let mut sum = Output::from(0);
-        for i in 0..ROWS {
-            let x = self[i].into();
-            sum += x * x;
-        }
-        sum
-    }
-
-    /// calculate the magnitude of the vector
-    #[must_use]
-    pub fn magnitude<Output>(self) -> <Output as Sqrt>::Output
-    where
-        T: Into<Output>,
-        Output: Copy + From<i8> + Mul + AddAssign<<Output as Mul>::Output> + Sqrt,
-    {
-        self.magnitude_squared().sqrt()
-    }
-
-    /// normalize the vector
-    #[must_use]
-    pub fn normalize<Output>(self) -> <Vector<T, ROWS> as Div<<Output as Sqrt>::Output>>::Output
-    where
-        T: Into<Output>,
-        Output: AddAssign + Copy + Div + From<i8> + Mul<Output = Output> + Sqrt,
-        Vector<T, ROWS>: Div<<Output as Sqrt>::Output>,
-    {
-        self / self.magnitude()
-    }
-
-    /// normalize the vector in place (without copying/allocating)
-    pub fn normalize_assign(&mut self)
-    where
-        T: AddAssign<<T as Mul>::Output> + Div + From<i8> + Mul + Sqrt<Output = T>,
-        Vector<T, ROWS>: DivAssign<T>,
-    {
-        *self /= self.magnitude::<T>();
-    }
-
     /// get a vector iterator that uses a custom index iterator
     pub const fn into_iter_for<I: Iterator<Item = usize>>(
         self,
@@ -136,5 +91,55 @@ where
     #[must_use]
     pub fn zero() -> Self {
         Self::from_value(T::from(0))
+    }
+}
+
+impl<T, const ROWS: usize> Vector<T, ROWS>
+where
+    T: AddAssign + Copy + From<i8> + Mul<Output = T>,
+{
+    /// calculate the squared magnitude of the vector, avoiding a costly square root calculation
+    #[must_use]
+    pub fn magnitude_squared(self) -> T {
+        let mut sum = T::from(0);
+        for i in 0..ROWS {
+            let x = self[i];
+            sum += x * x;
+        }
+        sum
+    }
+}
+
+impl<T, const ROWS: usize> Vector<T, ROWS>
+where
+    T: AddAssign + Copy + From<i8> + Mul<Output = T> + Sqrt<Output = T>,
+{
+    /// calculate the magnitude of the vector
+    #[must_use]
+    pub fn magnitude(self) -> T {
+        self.magnitude_squared().sqrt()
+    }
+}
+
+impl<T, const ROWS: usize> Vector<T, ROWS>
+where
+    T: AddAssign + Copy + From<i8> + Mul<Output = T> + Sqrt<Output = T>,
+    Vector<T, ROWS>: Div<T, Output = Vector<T, ROWS>>,
+{
+    /// normalize the vector
+    #[must_use]
+    pub fn normalize(self) -> Vector<T, ROWS> {
+        self / self.magnitude()
+    }
+}
+
+impl<T, const ROWS: usize> Vector<T, ROWS>
+where
+    T: AddAssign + Copy + From<i8> + Mul<Output = T> + Sqrt<Output = T>,
+    Vector<T, ROWS>: DivAssign<T>,
+{
+    /// normalize the vector in place (without copying/allocating)
+    pub fn normalize_assign(&mut self) {
+        *self /= self.magnitude();
     }
 }
