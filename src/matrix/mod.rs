@@ -7,6 +7,7 @@ mod add;
 mod componentwise;
 mod componentwise_scalar;
 mod default;
+mod from;
 mod index;
 pub mod iterator;
 mod matrix_multiply;
