@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.21.0] - 2024-10-27
+
+### Added
+
+- our own `From` and `Into` traits, because a quirk with Rust's generics won't let us use the
+  standard ones to convert between types of vector, matrix, etc.
+- `From` and `Into` implementations for `Matrix` and `Vector` that allow converting from one type of
+  type to another, using the existing conversion of the wrapped types.
+
+### Changed
+
+- `Matrix::from_fn` now uses a `MatrixCoordinate` as an index instead of a tuple
+- `Vector` math operations now assume input and output types will be the same (this simplifies the
+  trait bounds in downstream code)
+
 ## [0.20.2] - 2023-05-27
 
 ### Added
